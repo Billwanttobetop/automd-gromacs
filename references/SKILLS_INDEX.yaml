@@ -1,0 +1,375 @@
+version: "2.0"
+base_dir: "~/.openclaw/workspace/gromacs-skills-2.0"
+
+# ============================================
+# 基础 Skills (快速流程)
+# ============================================
+basic:
+  setup:
+    name: "系统准备"
+    description: "从 PDB 到可模拟系统 (pdb2gmx → editconf → solvate → genion)"
+    script: "scripts/basic/setup.sh"
+    troubleshoot: "references/troubleshoot/setup-errors.md"
+    
+    # AI 快速参考
+    quick_ref:
+      dependencies: ["gmx"]
+      auto_fix: ["forcefield_selection", "box_size"]
+      key_params:
+        - "forcefield: amber99sb-ildn (protein), charmm36 (membrane)"
+        - "water: tip3p (fast) / tip4p (accurate)"
+        - "box: dodecahedron (省 29% 空间)"
+        - "distance: 1.0 nm (min), 1.5-2.0 nm (pull)"
+      output: ["protein.gro", "topol.top", "posre.itp", "em.gro"]
+    
+  equilibration:
+    name: "系统平衡"
+    description: "能量最小化 → NVT → NPT"
+    script: "scripts/basic/equilibration.sh"
+    troubleshoot: "references/troubleshoot/equilibration-errors.md"
+    
+    # AI 快速参考
+    quick_ref:
+      dependencies: ["gmx"]
+      auto_fix: ["em_convergence", "nvt_stability", "npt_stability"]
+      key_params:
+        - "em: 50000 steps, emtol 1000 kJ/mol/nm"
+        - "nvt: 100 ps, 300K, V-rescale, tau_t 0.1"
+        - "npt: 100 ps, 1 bar, Parrinello-Rahman, tau_p 2.0"
+        - "posres: 4000 → 2000 → 1000 → 0 kJ/mol/nm²"
+      output: ["em.gro", "nvt.gro", "npt.gro", "npt.cpt"]
+    
+  analysis:
+    name: "基础分析"
+    description: "RMSD, RMSF, Rg, 能量, 氢键"
+    script: "scripts/basic/analysis.sh"
+    troubleshoot: "references/troubleshoot/analysis-errors.md"
+    
+    # AI 快速参考
+    quick_ref:
+      dependencies: ["gmx"]
+      auto_fix: ["group_selection"]
+      key_params:
+        - "rmsd: Backbone/C-alpha, < 0.3 nm 稳定"
+        - "rmsf: C-alpha, 高值=柔性 (loop)"
+        - "rg: 紧密度, 稳定=平坦曲线"
+        - "hbond: -r 0.35 -a 30 (距离 < 0.35 nm, 角度 < 30°)"
+      output: ["rmsd.xvg", "rmsf.xvg", "gyrate.xvg", "hbond.xvg", "sasa.xvg"]
+
+# ============================================
+# 高级 Skills (复杂应用)
+# ============================================
+advanced:
+  freeenergy:
+    name: "自由能计算"
+    description: "配体结合自由能 (TI/FEP/BAR) - 完整流程"
+    script: "scripts/advanced/freeenergy.sh"
+    troubleshoot: "references/troubleshoot/freeenergy-errors.md"
+    references:
+      - "references/manual/freeenergy.md"
+      - "references/papers/bar-tutorial.md"
+      - "references/bestpractices/freeenergy-tips.md"
+    examples: "examples/freeenergy/"
+    
+    # AI 快速参考
+    quick_ref:
+      dependencies: ["gmx", "acpype"]
+      auto_install: true
+      auto_fix:
+        - "acpype 缺失 → 自动安装 acpype / 尝试 antechamber"
+        - "配体拓扑缺失 → 多方案参数化"
+      key_params:
+        - "lambda_windows: 13 (非均匀)"
+        - "lambda_values: 端点密集 (0.0, 0.05, 0.1, ..., 0.9, 0.95, 1.0)"
+        - "sc-alpha: 0.5 (0.3-0.7, 带电系统 → 0.5-0.7)"
+        - "sc-power: 1"
+        - "sc-sigma: 0.3 nm"
+        - "cutoff: 1.2 nm (最小 1.0 nm)"
+        - "max_parallel: 4 (避免资源耗尽)"
+      common_errors:
+        - "ERROR-001: gmx/文件缺失 → 检查安装 & 路径"
+        - "ERROR-002: acpype 缺失 → auto-install"
+        - "ERROR-003: 参数化失败 → 检查配体格式 / 手动提供拓扑"
+      output: "ΔG ± error (kJ/mol), BAR 分析, 报告"
+    
+  umbrella:
+    name: "伞状采样"
+    description: "PMF 计算 (自动窗口设置 → 并行模拟 → WHAM 分析)"
+    script: "scripts/advanced/umbrella.sh"
+    troubleshoot: "references/troubleshoot/umbrella-errors.md"
+    references:
+      - "references/manual/umbrella.md"
+      - "references/papers/wham-tutorial.md"
+      - "references/bestpractices/umbrella-tips.md"
+    examples: "examples/umbrella/"
+    
+    # AI 快速参考
+    quick_ref:
+      dependencies: ["gmx"]
+      auto_fix: ["window_retry", "wham_convergence"]
+      key_params:
+        - "pull_rate: 0.005-0.01 nm/ps (慢速)"
+        - "window_spacing: 0.05-0.1 nm"
+        - "window_k: 1000 kJ/mol/nm²"
+        - "sample_time: 5-10 ns/window"
+        - "overlap: > 30% (相邻窗口)"
+      common_errors:
+        - "ERROR-001: grompp 失败 → 检查拉力组定义"
+        - "ERROR-002: 拉力模拟失败 → 减小 pull_rate"
+        - "ERROR-003: 构象提取失败 → 检查轨迹文件"
+        - "ERROR-004: WHAM 失败 → 检查窗口重叠"
+      output: ["pmf.xvg", "hist.xvg", "window trajectories"]
+    
+  membrane:
+    name: "膜蛋白模拟"
+    description: "膜构建 → 蛋白插入 → 平衡 → 膜性质分析"
+    script: "scripts/advanced/membrane.sh"
+    troubleshoot: "references/troubleshoot/membrane-errors.md"
+    references:
+      - "references/manual/membrane.md"
+      - "references/papers/membrane-tutorial.md"
+      - "references/bestpractices/membrane-tips.md"
+    examples: "examples/membrane/"
+    
+    # AI 快速参考
+    quick_ref:
+      dependencies: ["gmx", "insane"]
+      auto_install: true
+      auto_fix:
+        - "insane 缺失 → 自动安装 / 提示 CHARMM-GUI"
+        - "膜构建失败 → 尝试 insane / 提供预构建系统"
+      key_params:
+        - "membrane_type: POPC (常用), POPE (细菌), DPPC (凝胶相)"
+        - "temperature: 310 K (生理温度)"
+        - "pressure: semi-isotropic (XY & Z 独立)"
+        - "restraint_stages: 3 (分阶段释放约束)"
+        - "restraint_fc: 4000 → 2000 → 1000 (逐步减半)"
+      common_errors:
+        - "ERROR-001: 拓扑生成失败 → 检查 PDB 格式"
+        - "ERROR-002: 蛋白质定位失败 → 检查结构完整性"
+        - "ERROR-004: 膜构建失败 → auto-install insane / 用 CHARMM-GUI"
+      output: "平衡后膜蛋白系统, 分阶段轨迹, 报告"
+    
+  ligand:
+    name: "配体-蛋白质复合物"
+    description: "小分子参数化 → 对接后 MD → MM-PBSA 结合能"
+    script: "scripts/advanced/ligand.sh"
+    troubleshoot: "references/troubleshoot/ligand-errors.md"
+    references:
+      - "references/manual/ligand.md"
+      - "references/papers/mmpbsa-tutorial.md"
+      - "references/bestpractices/ligand-tips.md"
+    examples: "examples/ligand/"
+    
+    # AI 快速参考
+    quick_ref:
+      dependencies: ["gmx", "acpype"]
+      auto_install: true
+      auto_fix:
+        - "acpype 缺失 → 自动安装 acpype / 尝试 antechamber"
+        - "配体拓扑缺失 → 多方案参数化"
+      key_params:
+        - "force_field: amber99sb-ildn (蛋白质)"
+        - "water_model: tip3p"
+        - "box_distance: 1.0 nm"
+        - "ion_concentration: 0.15 M"
+        - "temperature: 300 K"
+        - "restraint: 可选 (蛋白质/配体)"
+      common_errors:
+        - "ERROR-001: 拓扑生成失败 → 检查 PDB 格式"
+        - "ERROR-002: 配体参数化失败 → auto-install / 手动提供"
+        - "ERROR-003: 配体文件缺失 → 提供 ligand.gro & ligand.itp"
+        - "ERROR-004: 盒子/溶剂化失败 → 检查结构 & 参数"
+      output: "平衡后复合物, 轨迹, 结合分析脚本, 报告"
+
+# ============================================
+  production:
+    name: "生产模拟"
+    description: "运行生产 MD 模拟"
+    script: "scripts/basic/production.sh"
+    troubleshoot: "references/troubleshoot/production-errors.md"
+    quick_ref:
+      dependencies: ["gmx"]
+      auto_fix: ["checkpoint_recovery"]
+      key_params:
+        - "time: 1000 ps"
+        - "dt: 0.002 ps"
+      output: ["md.xtc", "md.edr", "md.log"]
+
+  preprocess:
+    name: "预处理"
+    description: "grompp - 生成 TPR"
+    script: "scripts/basic/preprocess.sh"
+    troubleshoot: "references/troubleshoot/preprocess-errors.md"
+    quick_ref:
+      dependencies: ["gmx"]
+      output: ["output.tpr"]
+
+  utils_tools:
+    name: "实用工具"
+    description: "trjconv, editconf, make_ndx"
+    script: "scripts/basic/utils.sh"
+    troubleshoot: "references/troubleshoot/utils-errors.md"
+    quick_ref:
+      dependencies: ["gmx"]
+      output: ["转换后的文件"]
+
+  pca:
+    name: "主成分分析"
+    description: "PCA 分析"
+    script: "scripts/advanced/pca.sh"
+    troubleshoot: "references/troubleshoot/pca-errors.md"
+    quick_ref:
+      dependencies: ["gmx"]
+      output: ["eigenval.xvg", "eigenvec.trr"]
+
+  protein:
+    name: "蛋白质专用"
+    description: "DSSP, SASA"
+    script: "scripts/advanced/protein.sh"
+    troubleshoot: "references/troubleshoot/protein-errors.md"
+    quick_ref:
+      dependencies: ["gmx", "dssp"]
+      output: ["dssp.xpm", "sasa.xvg"]
+
+  workflow:
+    name: "完整工作流"
+    description: "端到端自动化"
+    script: "scripts/advanced/workflow.sh"
+    troubleshoot: "references/troubleshoot/workflow-errors.md"
+    quick_ref:
+      dependencies: ["gmx"]
+      output: ["完整结果"]
+
+
+# 工具函数 (内部使用)
+# ============================================
+utils:
+  check:
+    description: "检查 GROMACS 安装和文件"
+    script: "scripts/utils/check.sh"
+    
+  validate:
+    description: "验证模拟结果质量"
+    script: "scripts/utils/validate.sh"
+    
+  report:
+    description: "生成标准化报告"
+    script: "scripts/utils/report.sh"
+
+# ============================================
+# 使用说明
+# ============================================
+usage: |
+  AI 使用流程:
+  1. 读取此索引文件 (SKILLS_INDEX.yaml)
+  2. 根据用户需求匹配 skill
+  3. 查看 quick_ref 了解关键参数和常见错误
+  4. 执行对应的 script (脚本内置自动修复)
+  5. 如果出错,读取 troubleshoot 文档
+  6. 按需读取 references
+  
+  示例:
+  用户: "帮我做配体结合自由能计算"
+  → 匹配: advanced.freeenergy
+  → 查看: quick_ref (了解 lambda 分布、软核参数)
+  → 执行: scripts/advanced/freeenergy.sh --complex complex.pdb --ligand ligand.mol2
+  → 脚本自动: 检查依赖 → 尝试安装 acpype → 多方案参数化 → 运行计算
+  → 如果出错: 读取 troubleshoot/freeenergy-errors.md
+  
+  关键改进 (Skills 2.0):
+  - 脚本内置自动修复 (auto_install_dependencies, 多方案尝试)
+  - 错误信息精简且可执行 ([ERROR-XXX] + Fix: 命令)
+  - 手册关键事实内嵌到脚本注释 (lambda 分布、软核参数等)
+  - 注释面向 AI (简洁、结构化)
+  - quick_ref 提供最小上下文 (省 token)
+  
+  Token 节省 (v2.0.2+):
+  - 正常流程: 70-85% (从 ~11,000 → ~1,500-3,500 tokens)
+  - 出错流程: 40% (从 ~25,000 → ~15,000 tokens)
+  - 对比 1.0: 82-89% (从 39-65 KB → 7-15 KB)
+
+  production:
+    name: "生产模拟"
+    description: "运行生产 MD 模拟 (mdrun)"
+    script: "scripts/basic/production.sh"
+    troubleshoot: "references/troubleshoot/production-errors.md"
+    
+    quick_ref:
+      dependencies: ["gmx"]
+      auto_fix: ["checkpoint_recovery"]
+      key_params:
+        - "time: 1000 ps (1 ns)"
+        - "dt: 0.002 ps (2 fs)"
+        - "temperature: 300 K"
+        - "pressure: 1 bar"
+      output: ["md.xtc", "md.edr", "md.log", "md.cpt"]
+
+  preprocess:
+    name: "预处理"
+    description: "grompp - 生成 TPR 文件"
+    script: "scripts/basic/preprocess.sh"
+    troubleshoot: "references/troubleshoot/preprocess-errors.md"
+    
+    quick_ref:
+      dependencies: ["gmx"]
+      auto_fix: ["parameter_check"]
+      key_params:
+        - "mdp: 模拟参数文件"
+        - "coord: 坐标文件"
+        - "topology: 拓扑文件"
+      output: ["output.tpr"]
+
+  utils_tools:
+    name: "实用工具"
+    description: "trjconv, editconf, make_ndx"
+    script: "scripts/basic/utils.sh"
+    troubleshoot: "references/troubleshoot/utils-errors.md"
+    
+    quick_ref:
+      dependencies: ["gmx"]
+      auto_fix: ["format_detection"]
+      key_params:
+        - "action: convert|center|fit|pbc|index"
+        - "format: pdb|gro|xtc|trr"
+      output: ["转换后的文件"]
+
+  pca:
+    name: "主成分分析"
+    description: "PCA - covar, anaeig, 2dproj"
+    script: "scripts/advanced/pca.sh"
+    troubleshoot: "references/troubleshoot/pca-errors.md"
+    
+    quick_ref:
+      dependencies: ["gmx"]
+      key_params:
+        - "trajectory: md.xtc"
+        - "structure: md.tpr"
+      output: ["eigenval.xvg", "eigenvec.trr", "2dproj.xvg"]
+
+  protein:
+    name: "蛋白质专用"
+    description: "二级结构 (DSSP), SASA"
+    script: "scripts/advanced/protein.sh"
+    troubleshoot: "references/troubleshoot/protein-errors.md"
+    
+    quick_ref:
+      dependencies: ["gmx", "dssp"]
+      key_params:
+        - "trajectory: md.xtc"
+        - "structure: md.tpr"
+      output: ["dssp.xpm", "sasa.xvg"]
+
+  workflow:
+    name: "完整工作流"
+    description: "端到端自动化"
+    script: "scripts/advanced/workflow.sh"
+    troubleshoot: "references/troubleshoot/workflow-errors.md"
+    
+    quick_ref:
+      dependencies: ["gmx"]
+      auto_fix: ["checkpoint_recovery"]
+      key_params:
+        - "input: protein.pdb"
+        - "time: 100 ps"
+      output: ["完整模拟结果"]

@@ -1,0 +1,36 @@
+# Development files
+*.log
+*.tmp
+*.bak
+*~
+
+# Test outputs
+test_*
+*.xtc
+*.edr
+*.cpt
+*.trr
+*.gro
+*.tpr
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.so
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build
+dist/
+build/
+*.egg-info/
