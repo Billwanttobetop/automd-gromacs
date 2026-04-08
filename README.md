@@ -87,7 +87,7 @@ bash scripts/basic/analysis.sh --trajectory md.xtc --structure md.tpr
 
 - **Author:** Guo Xuan 郭轩
 - **GitHub:** [@Billwanttobetop](https://github.com/Billwanttobetop)
-- **Email:** guoxuan@hkust-gz.edu.cn
+- **Email:** xguo608@connect.hkust-gz.edu.cn
 - **Institution:** Hong Kong University of Science and Technology (Guangzhou)
 - **Project:** Part of the AutoMD series
 
@@ -180,7 +180,7 @@ bash scripts/basic/analysis.sh --trajectory md.xtc --structure md.tpr
 
 - **作者:** 郭轩 Guo Xuan
 - **GitHub:** [@Billwanttobetop](https://github.com/Billwanttobetop)
-- **邮箱:** guoxuan@hkust-gz.edu.cn
+- **邮箱:** xguo608@connect.hkust-gz.edu.cn
 - **单位:** 香港科技大学（广州）
 - **项目:** AutoMD 系列的一部分
 
