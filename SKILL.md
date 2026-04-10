@@ -1,7 +1,7 @@
 ---
 name: automd-gromacs
-description: "AutoMD-GROMACS: Automated molecular dynamics simulation workflow - 13 Skills covering system setup, equilibration, production, analysis, free energy, ligand binding, membrane proteins, umbrella sampling, PCA, and workflows. Built-in auto-repair, 84.7% token savings. Part of the AutoMD series."
-version: 2.1.0
+description: "AutoMD-GROMACS: AI-friendly molecular dynamics automation for GROMACS with workflow, enhanced sampling, special-system simulation, advanced analysis, and publication-ready visualization. Built-in troubleshooting and token-optimized execution. Part of the AutoMD series."
+version: 4.0.0
 author: Guo Xuan
 organization: Hong Kong University of Science and Technology (Guangzhou)
 homepage: https://github.com/Billwanttobetop/automd-gromacs
@@ -28,48 +28,35 @@ metadata:
 
 # AutoMD-GROMACS
 
-Automated molecular dynamics simulation workflow for GROMACS, optimized for AI agents with built-in auto-repair and manual knowledge. Part of the **AutoMD series** for automated MD simulations.
+AutoMD-GROMACS is an AI-oriented automation toolkit for GROMACS. It packages end-to-end simulation workflows, enhanced sampling, special-system simulation, advanced analysis, and publication-ready visualization into executable Skills with troubleshooting references.
+
+## Scope
+
+- Core workflow: setup, equilibration, production, preprocessing, utilities
+- Enhanced sampling: umbrella, free energy, replica exchange, metadynamics, steered MD, enhanced sampling, accelerated MD
+- Special systems: membrane, ligand, coarse-grained, electric field, non-equilibrium, QM/MM
+- Analysis: trajectory, binding, property, membrane, scattering, free-energy, protein-focused analyses
+- Visualization: publication-ready plotting and structure/trajectory rendering
 
 ## Quick Start
 
-1. Read the index: `read references/SKILLS_INDEX.yaml`
-2. Choose a skill (setup, freeenergy, umbrella, etc.)
-3. Execute: `bash scripts/<skill>.sh <args>`
-4. If errors occur: `read references/troubleshoot/<skill>-errors.md`
+1. Read `references/SKILLS_INDEX.yaml`
+2. Pick the relevant script under `scripts/`
+3. Run `bash scripts/<group>/<skill>.sh ...`
+4. If something fails, read `references/troubleshoot/<skill>-errors.md`
 
-## 13 Skills Overview
+## Design
 
-**Basic (P0):** setup, equilibration, production, analysis  
-**Advanced (P1):** freeenergy, umbrella, membrane, ligand  
-**Extended (P2):** pca, workflow  
-**Utility (P3):** protein, utils, run
-
-## Architecture
-
-3-layer progressive disclosure:
-- Layer 1: SKILL.md (this file) - quick overview
-- Layer 2: references/SKILLS_INDEX.yaml - structured index
-- Layer 3: scripts/*.sh + references/troubleshoot/*.md - executable scripts + troubleshooting
-
-## Design Principles
-
-- Executable > Readable: Direct runnable commands, not tutorials
-- Structured > Textual: YAML/scripts, not long docs
-- Embedded Facts > External References: 90+ manual knowledge points embedded
-- Auto-Repair > Manual Intervention: 8+ auto-repair functions
-
-## Token Optimization
-
-- Normal flow: 2,300 tokens (vs traditional 15,000)
-- 84.7% savings, 100% technical accuracy maintained
+- Executable workflows over tutorial prose
+- Layered disclosure for low token overhead
+- Embedded domain knowledge from GROMACS practice
+- Auto-repair and troubleshooting guidance by default
 
 ## Project Info
 
-- Version: 2.1.0
+- Version: 4.0.0
 - Based on: GROMACS 2026.1
 - License: MIT
-- Verified: Real system validation (LYSOZYME 38376 atoms)
-
----
+- Homepage: https://github.com/Billwanttobetop/automd-gromacs
 
 **Get started:** `read references/SKILLS_INDEX.yaml`

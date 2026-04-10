@@ -8,48 +8,38 @@
 
 ### Overview
 
-**AutoMD-GROMACS** is an automated molecular dynamics simulation workflow toolkit for GROMACS, designed for AI agents with built-in auto-repair and optimized token usage. Part of the **AutoMD series** for automated MD simulations.
+**AutoMD-GROMACS** is an AI-friendly automation toolkit for GROMACS workflows. It now covers core MD execution, enhanced sampling, special-system simulation, advanced analysis, and publication-ready visualization as part of the **AutoMD** ecosystem.
 
 **Author:** Guo Xuan 郭轩  
 **Institution:** Hong Kong University of Science and Technology (Guangzhou)  
-**Version:** v2.1.0  
+**Version:** v4.0.0  
 **License:** MIT
 
-### Features
+### Highlights
 
-- **13 Complete Skills** (6 basic + 7 advanced)
-- **Built-in Auto-Repair** (8+ functions)
-- **Token Optimized** (84.7% savings)
-- **Real-World Validated** (production tested)
-- **AI-Friendly Design** (layered disclosure architecture)
+- Core workflow automation for setup, equilibration, production, and preprocessing
+- Enhanced sampling methods including umbrella, free energy, replica exchange, metadynamics, steered MD, and related protocols
+- Special-system support for membrane, ligand, coarse-grained, electric-field, non-equilibrium, and QM/MM scenarios
+- Advanced analysis modules for trajectory, binding, property, membrane, scattering, free-energy, and protein-focused studies
+- Publication-ready visualization workflow for figures and reports
+- Token-optimized, troubleshooting-first design for AI agents
 
-### Skills List
+### Repository Layout
 
-**Basic Skills (6):**
-1. setup - System preparation
-2. equilibration - System equilibration
-3. analysis - Basic analysis
-4. production - Production simulation
-5. preprocess - Preprocessing (grompp)
-6. utils - Utility tools
-
-**Advanced Skills (7):**
-7. freeenergy - Free energy calculation
-8. ligand - Ligand-protein complex
-9. membrane - Membrane protein simulation
-10. umbrella - Umbrella sampling
-11. pca - Principal component analysis
-12. protein - Protein-specific analysis
-13. workflow - End-to-end automation
+```text
+scripts/basic/          core workflow scripts
+scripts/advanced/       sampling and special-system workflows
+scripts/analysis/       advanced analysis modules
+scripts/visualization/  publication-ready visualization
+references/             indexes and troubleshooting docs
+examples/               example inputs and usage patterns
+```
 
 ### Installation
 
 ```bash
 # Via clawhub
 clawhub install automd-gromacs
-
-# Via skillhub
-skillhub install automd-gromacs
 
 # Via GitHub
 git clone https://github.com/Billwanttobetop/automd-gromacs.git
@@ -58,42 +48,35 @@ git clone https://github.com/Billwanttobetop/automd-gromacs.git
 ### Quick Start
 
 ```bash
-# System setup
+# Core setup
 bash scripts/basic/setup.sh --input protein.pdb
 
-# Equilibration
-bash scripts/basic/equilibration.sh --input setup_ions.gro --topology topol.top
+# Replica exchange example
+bash scripts/advanced/replica-exchange.sh
 
-# Production simulation
-bash scripts/basic/production.sh --input npt.gro --topology topol.top --time 1000
+# Advanced trajectory analysis example
+bash scripts/analysis/trajectory-analysis.sh -s md.tpr -f md.xtc
 
-# Analysis
-bash scripts/basic/analysis.sh --trajectory md.xtc --structure md.tpr
+# Publication-ready visualization example
+bash scripts/visualization/publication-viz.sh --type plot --data rmsd.xvg
 ```
 
 ### Documentation
 
-- **SKILL.md** - Complete guide
-- **MAINTENANCE_GUIDE.md** - Maintenance guide
-- **references/SKILLS_INDEX.yaml** - Skills index
-- **references/troubleshoot/** - Troubleshooting docs
+- `SKILL.md` - package entry and overview
+- `references/SKILLS_INDEX.yaml` - structured index
+- `references/troubleshoot/` - troubleshooting references
+- `RELEASE_v3.0.0.md` - previous major release notes
 
 ### Requirements
 
 - GROMACS 2026.1+
-- Optional: acpype, dssp (for advanced features)
+- Optional tools depending on workflow: PLUMED, acpype, martinize2, CP2K, ORCA, plotting utilities
 
 ### Contact
 
-- **Author:** Guo Xuan 郭轩
 - **GitHub:** [@Billwanttobetop](https://github.com/Billwanttobetop)
 - **Email:** xguo608@connect.hkust-gz.edu.cn
-- **Institution:** Hong Kong University of Science and Technology (Guangzhou)
-- **Project:** Part of the AutoMD series
-
-### License
-
-MIT License - see [LICENSE](LICENSE) file
 
 ---
 
@@ -101,48 +84,38 @@ MIT License - see [LICENSE](LICENSE) file
 
 ### 概述
 
-**AutoMD-GROMACS** 是一个自动化的 GROMACS 分子动力学模拟工作流工具包，专为 AI Agent 设计，内置自动修复功能和优化的 Token 使用。属于 **AutoMD 系列**自动化分子动力学模拟工具。
+**AutoMD-GROMACS** 是面向 AI Agent 的 GROMACS 自动化工具包，现已覆盖核心分子动力学流程、增强采样、特殊体系模拟、高级分析与论文级可视化，属于 **AutoMD** 系列生态的一部分。
 
 **作者:** 郭轩 Guo Xuan  
 **单位:** 香港科技大学（广州）  
-**版本:** v2.1.0  
+**版本:** v4.0.0  
 **许可证:** MIT
 
-### 特性
+### 核心亮点
 
-- **13 个完整 Skills** (基础 6 + 高级 7)
-- **内置自动修复** (8+ 函数)
-- **Token 优化** (节省 84.7%)
-- **真实验证** (生产环境测试)
-- **AI 友好设计** (层进式披露架构)
+- 覆盖系统准备、平衡、生产、预处理等核心流程
+- 支持 umbrella、free energy、replica exchange、metadynamics、steered MD 等增强采样方法
+- 支持膜体系、配体体系、粗粒化、电场、非平衡、QM/MM 等特殊场景
+- 提供轨迹、结合、性质、膜、散射、自由能、蛋白专题等高级分析模块
+- 提供论文级图形与结构/轨迹可视化能力
+- 面向 AI 协作优化，默认强调低 token 和故障排查
 
-### Skills 列表
+### 目录结构
 
-**基础 Skills (6个):**
-1. setup - 系统准备
-2. equilibration - 系统平衡
-3. analysis - 基础分析
-4. production - 生产模拟
-5. preprocess - 预处理 (grompp)
-6. utils - 实用工具
-
-**高级 Skills (7个):**
-7. freeenergy - 自由能计算
-8. ligand - 配体-蛋白质复合物
-9. membrane - 膜蛋白模拟
-10. umbrella - 伞状采样
-11. pca - 主成分分析
-12. protein - 蛋白质专用分析
-13. workflow - 端到端自动化
+```text
+scripts/basic/          核心流程脚本
+scripts/advanced/       增强采样与特殊体系脚本
+scripts/analysis/       高级分析模块
+scripts/visualization/  论文级可视化模块
+references/             索引与故障排查文档
+examples/               示例输入与使用模板
+```
 
 ### 安装
 
 ```bash
 # 通过 clawhub
 clawhub install automd-gromacs
-
-# 通过 skillhub
-skillhub install automd-gromacs
 
 # 通过 GitHub
 git clone https://github.com/Billwanttobetop/automd-gromacs.git
@@ -154,36 +127,29 @@ git clone https://github.com/Billwanttobetop/automd-gromacs.git
 # 系统准备
 bash scripts/basic/setup.sh --input protein.pdb
 
-# 系统平衡
-bash scripts/basic/equilibration.sh --input setup_ions.gro --topology topol.top
+# 副本交换
+bash scripts/advanced/replica-exchange.sh
 
-# 生产模拟
-bash scripts/basic/production.sh --input npt.gro --topology topol.top --time 1000
+# 高级轨迹分析
+bash scripts/analysis/trajectory-analysis.sh -s md.tpr -f md.xtc
 
-# 分析
-bash scripts/basic/analysis.sh --trajectory md.xtc --structure md.tpr
+# 论文级可视化
+bash scripts/visualization/publication-viz.sh --type plot --data rmsd.xvg
 ```
 
 ### 文档
 
-- **SKILL.md** - 完整指南
-- **MAINTENANCE_GUIDE.md** - 维护指南
-- **references/SKILLS_INDEX.yaml** - Skills 索引
-- **references/troubleshoot/** - 故障排查文档
+- `SKILL.md` - 包入口与总览
+- `references/SKILLS_INDEX.yaml` - 结构化索引
+- `references/troubleshoot/` - 故障排查文档
+- `RELEASE_v3.0.0.md` - 上一阶段主要发布说明
 
 ### 依赖
 
 - GROMACS 2026.1+
-- 可选: acpype, dssp (高级功能)
+- 按具体工作流可选：PLUMED、acpype、martinize2、CP2K、ORCA、绘图工具等
 
 ### 联系方式
 
-- **作者:** 郭轩 Guo Xuan
 - **GitHub:** [@Billwanttobetop](https://github.com/Billwanttobetop)
 - **邮箱:** xguo608@connect.hkust-gz.edu.cn
-- **单位:** 香港科技大学（广州）
-- **项目:** AutoMD 系列的一部分
-
-### 许可证
-
-MIT 许可证 - 查看 [LICENSE](LICENSE) 文件

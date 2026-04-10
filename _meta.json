@@ -1,17 +1,28 @@
 {
   "name": "automd-gromacs",
-  "version": "2.1.0",
+  "version": "4.0.0",
   "author": "Guo Xuan 郭轩",
   "organization": "Hong Kong University of Science and Technology (Guangzhou) | 香港科技大学（广州）",
   "homepage": "https://github.com/Billwanttobetop/automd-gromacs",
   "repository": "https://github.com/Billwanttobetop/automd-gromacs",
   "category": "science",
-  "tags": ["automd", "gromacs", "molecular-dynamics", "simulation", "automation", "biophysics", "computational-chemistry", "protein", "membrane", "free-energy", "umbrella-sampling", "pca"],
+  "tags": [
+    "automd",
+    "gromacs",
+    "molecular-dynamics",
+    "simulation",
+    "automation",
+    "enhanced-sampling",
+    "qmmm",
+    "metadynamics",
+    "analysis",
+    "visualization"
+  ],
   "license": "MIT",
   "verified": {
     "author": "Guo Xuan 郭轩",
     "institution": "HKUST(GZ)",
-    "date": "2026-04-07",
-    "checksum": "sha256:automd-gromacs-v2.1.0-hkustgz"
+    "date": "2026-04-10",
+    "checksum": "sha256:automd-gromacs-v4.0.0-hkustgz"
   }
 }
