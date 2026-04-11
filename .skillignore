@@ -1,3 +1,54 @@
-# 开发文档（不包含在 Skill 中）
-*.log
+# VCS and transient files
 .git/
+*.log
+
+# Internal metadata
+_meta.json
+
+# Archive and local helper artifacts
+archive/
+QUICK_UPDATE.sh
+
+# Development, status, and work tracking
+DEVELOPMENT_*.md
+PROJECT_STATUS.md
+WORK_LOG.md
+REPO_SLIMMING_PLAN.md
+METHOD_SELECTOR_SPEC.md
+
+# Test and verification reports
+TEST_*.md
+VERIFICATION.md
+UPLOAD_CHECKLIST.md
+*-dev-report.md
+*-test-report.md
+*-test-summary.md
+
+# Completion and delivery notes
+*_COMPLETION.md
+*_SUMMARY.md
+*_DELIVERY.md
+*_FINAL_REPORT.md
+*_COMPLETION_SUMMARY.md
+*completion-summary.md
+TASK_COMPLETION_*.md
+
+# Backup files
+*.backup
+
+# Publish and maintenance process docs
+CLAWHUB_PUBLISH.md
+GITHUB_PUBLISH.md
+GITHUB_SETUP.md
+FINAL_PUBLISH_SOLUTION.md
+MANUAL_PUBLISH_GUIDE.md
+PUBLISH_*.md
+SKILLHUB_PUBLISH_STATUS.md
+SKILLHUB_SUBMIT.md
+MAINTENANCE_*.md
+
+# Release/process notes not needed inside the packaged skill
+RELEASE_*.md
+RENAME_COMPLETE.md
+PUBLICATION_VIZ_GUIDE.md
+STEERED_MD_USAGE_EXAMPLES.md

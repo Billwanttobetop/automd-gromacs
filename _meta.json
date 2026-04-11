@@ -1,6 +1,6 @@
 {
   "name": "automd-gromacs",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "author": "Guo Xuan 郭轩",
   "organization": "Hong Kong University of Science and Technology (Guangzhou) | 香港科技大学（广州）",
   "homepage": "https://github.com/Billwanttobetop/automd-gromacs",
@@ -23,6 +23,6 @@
     "author": "Guo Xuan 郭轩",
     "institution": "HKUST(GZ)",
     "date": "2026-04-10",
-    "checksum": "sha256:automd-gromacs-v4.0.0-hkustgz"
+    "checksum": "sha256:automd-gromacs-v5.0.0-hkustgz"
   }
 }
