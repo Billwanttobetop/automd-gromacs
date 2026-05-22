@@ -1,0 +1,24 @@
+# This file was created Fri May 22 09:49:35 2026
+# Created by:
+#                 :-) GROMACS - gmx rms, 2026.0-conda_forge (-:
+# 
+# Executable:   /root/miniconda3/bin.AVX2_256/gmx
+# Data prefix:  /root/miniconda3
+# Working dir:  /root/autodl-tmp/users/ou_a1d19d5984eecd78f231c50f774eddb0/automd-examples/ispetase/system/analysis
+# Command line:
+#   gmx rms -s ../production/prod.tpr -f ../production/prod.trr -o rmsd.xvg -fit rot+trans
+# gmx rms is part of G R O M A C S:
+#
+# Gallium Rubidium Oxygen Manganese Argon Carbon Silicon
+#
+@    title "RMSD"
+@    xaxis  label "Time (ps)"
+@    yaxis  label "RMSD (nm)"
+@TYPE xy
+@ subtitle "Backbone after lsq fit to Backbone"
+   0.0000000    0.0000001
+   2.0000000    0.0517856
+   4.0000000    0.0608833
+   6.0000000    0.0570241
+   8.0000000    0.0619344
+  10.0000000    0.0622079

@@ -611,7 +611,7 @@ validate_numeric
 build_time_args
 
 mkdir -p "$OUTDIR"
-export OMP_NUM_THREADS="$NTOMP"
+# Thread control via -ntomp flag below
 
 if [[ -z "$LIPID_GROUP" ]]; then
     LIPID_GROUP=$(auto_detect_group lipid)

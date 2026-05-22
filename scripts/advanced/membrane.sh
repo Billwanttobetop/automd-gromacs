@@ -165,7 +165,7 @@ else
 fi
 
 # 计算盒子 Z 尺寸
-BOX_Z=$(echo "$MEMBRANE_THICKNESS + 2 * $WATER_THICKNESS" | bc)
+BOX_Z=$(awk "BEGIN{printf "%d", $MEMBRANE_THICKNESS + 2 * $WATER_THICKNESS}" )
 
 # 定义盒子: protein_centered.gro → protein_box.gro
 # 参数: BOX_X, BOX_Y, BOX_Z
@@ -211,7 +211,7 @@ EOF
 
 log "运行能量最小化..."
 gmx grompp -f em.mdp -c system_membrane.gro -p topol_membrane.top -o em.tpr -maxwarn 2 || error "[ERROR-005] grompp 失败"
-export OMP_NUM_THREADS=$NTOMP
+# Thread control via -ntomp flag below
 gmx mdrun -v -deffnm em -ntmpi 1 -ntomp $NTOMP || error "[ERROR-006] 能量最小化失败"
 
 log "能量最小化完成"
@@ -230,7 +230,7 @@ for stage in $(seq 1 $RESTRAINT_STAGES); do
     
     # 计算约束力常数: 逐步减半
     # 阶段 1: 4000, 阶段 2: 2000, 阶段 3: 1000
-    RESTRAINT_FC=$(echo "scale=0; $RESTRAINT_FC_INIT / (2^($stage-1))" | bc)
+    RESTRAINT_FC=$(awk "BEGIN{printf "%d", scale=0; $RESTRAINT_FC_INIT / (2^($stage-1))}" )
     log "约束力常数: $RESTRAINT_FC kJ/mol/nm²"
     
     # NVT 平衡
@@ -397,13 +397,13 @@ cat > MEMBRANE_REPORT.md << EOF
 EOF
 
 for stage in $(seq 1 $RESTRAINT_STAGES); do
-    RESTRAINT_FC=$(echo "scale=0; $RESTRAINT_FC_INIT / (2^($stage-1))" | bc)
+    RESTRAINT_FC=$(awk "BEGIN{printf "%d", scale=0; $RESTRAINT_FC_INIT / (2^($stage-1))}" )
     cat >> MEMBRANE_REPORT.md << EOF
 
 #### 阶段 $stage
 - **约束力常数:** $RESTRAINT_FC kJ/mol/nm²
-- **NVT:** $NVT_STEPS 步 ($(echo "scale=1; $NVT_STEPS * 0.002" | bc) ps)
-- **NPT:** $NPT_STEPS 步 ($(echo "scale=1; $NPT_STEPS * 0.002" | bc) ps)
+- **NVT:** $NVT_STEPS 步 ($(awk "BEGIN{printf "%.1f", ($NVT_STEPS * 0.002)}" ) ps)
+- **NPT:** $NPT_STEPS 步 ($(awk "BEGIN{printf "%.1f", ($NPT_STEPS * 0.002)}" ) ps)
 - **输出文件:** nvt_stage${stage}.gro, npt_stage${stage}.gro
 EOF
 done

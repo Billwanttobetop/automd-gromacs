@@ -1,0 +1,31 @@
+# This file was created Fri May 22 10:12:37 2026
+# Created by:
+#              :-) GROMACS - gmx freevolume, 2026.0-conda_forge (-:
+# 
+# Executable:   /root/miniconda3/bin.AVX2_256/gmx
+# Data prefix:  /root/miniconda3
+# Working dir:  /root/autodl-tmp/users/ou_a1d19d5984eecd78f231c50f774eddb0/automd-examples/ispetase/system/analysis/properties
+# Command line:
+#   gmx freevolume -s ../../production/prod.tpr -f ../../production/prod.trr -n ../analysis.ndx -o freevolume.xvg
+# gmx freevolume is part of G R O M A C S:
+#
+# Gravel Rubs Often Many Awfully Cauterized Sores
+#
+@    title "Free Volume"
+@    xaxis  label "Time (ps)"
+@    yaxis  label "Free Volume (%)"
+@TYPE xy
+@ view 0.15, 0.15, 0.75, 0.85
+@ legend on
+@ legend box on
+@ legend loctype view
+@ legend 0.78, 0.8
+@ legend length 2
+@ s0 legend "Free Volume"
+@ s1 legend "Volume"
+      0.000   42.101  337.079
+      2.000   42.653  340.961
+      4.000   42.508  340.920
+      6.000   42.288  338.921
+      8.000   42.251  337.687
+     10.000   42.370  339.308

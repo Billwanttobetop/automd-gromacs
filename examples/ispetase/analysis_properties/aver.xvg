@@ -1,0 +1,33 @@
+# This file was created Fri May 22 10:12:37 2026
+# Created by:
+#               :-) GROMACS - gmx dipoles, 2026.0-conda_forge (-:
+# 
+# Executable:   /root/miniconda3/bin.AVX2_256/gmx
+# Data prefix:  /root/miniconda3
+# Working dir:  /root/autodl-tmp/users/ou_a1d19d5984eecd78f231c50f774eddb0/automd-examples/ispetase/system/analysis/properties
+# Command line:
+#   gmx dipoles -s ../../production/prod.tpr -f ../../production/prod.trr -n ../analysis.ndx -o dipoles.xvg -eps epsilon.xvg
+# gmx dipoles is part of G R O M A C S:
+#
+# Gravel Rubs Often Many Awfully Cauterized Sores
+#
+@    title "Total dipole moment"
+@    xaxis  label "Time (ps)"
+@    yaxis  label "D"
+@TYPE xy
+@ view 0.15, 0.15, 0.75, 0.85
+@ legend on
+@ legend box on
+@ legend loctype view
+@ legend 0.78, 0.8
+@ legend length 2
+@ s0 legend "< |M|\S2\N >"
+@ s1 legend "< |M| >\S2\N"
+@ s2 legend "< |M|\S2\N > - < |M| >\S2\N"
+@ s3 legend "< |M| >\S2\N / < |M|\S2\N >"
+         0   4.076e+05  4.076e+05  0.000e+00  1.000e+00
+         2   4.152e+05  4.151e+05  7.664e+01  9.998e-01
+         4   4.252e+05  4.250e+05  2.285e+02  9.995e-01
+         6   4.288e+05  4.286e+05  2.264e+02  9.995e-01
+         8   4.303e+05  4.299e+05  3.195e+02  9.993e-01
+        10   4.323e+05  4.320e+05  3.044e+02  9.993e-01

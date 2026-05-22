@@ -36,7 +36,7 @@ PRERUN_DONE="${PRERUN_DONE:-false}"     # 是否已完成预运行
 # 模拟参数
 SIM_TIME="${SIM_TIME:-10000}"           # 模拟时间 (ps)
 DT="${DT:-0.002}"                       # 时间步长 (ps)
-NSTEPS=$(echo "$SIM_TIME / $DT" | bc)
+NSTEPS=$(awk "BEGIN{printf "%d", $SIM_TIME / $DT}" )
 TEMPERATURE="${TEMPERATURE:-300}"       # 温度 (K)
 
 # 计算资源

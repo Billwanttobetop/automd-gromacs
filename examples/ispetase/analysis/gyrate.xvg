@@ -1,0 +1,33 @@
+# This file was created Fri May 22 09:49:35 2026
+# Created by:
+#                :-) GROMACS - gmx gyrate, 2026.0-conda_forge (-:
+# 
+# Executable:   /root/miniconda3/bin.AVX2_256/gmx
+# Data prefix:  /root/miniconda3
+# Working dir:  /root/autodl-tmp/users/ou_a1d19d5984eecd78f231c50f774eddb0/automd-examples/ispetase/system/analysis
+# Command line:
+#   gmx gyrate -s ../production/prod.tpr -f ../production/prod.trr -o gyrate.xvg
+# gmx gyrate is part of G R O M A C S:
+#
+# Gallium Rubidium Oxygen Manganese Argon Carbon Silicon
+#
+@    title "Radius of gyration (total and around axes)"
+@    xaxis  label "Time (ps)"
+@    yaxis  label "Radius (nm)"
+@TYPE xy
+@ view 0.15, 0.15, 0.75, 0.85
+@ legend on
+@ legend box on
+@ legend loctype view
+@ legend 0.78, 0.8
+@ legend length 2
+@ s0 legend "Rg"
+@ s1 legend "Rg/sX/N"
+@ s2 legend "Rg/sY/N"
+@ s3 legend "Rg/sZ/N"
+      0.000 1.663137 1.389229 1.361876 1.321889
+      2.000 1.677273 1.395803 1.374425 1.337601
+      4.000 1.681177 1.400833 1.378873 1.337566
+      6.000 1.678106 1.398533 1.376236 1.334975
+      8.000 1.673840 1.391253 1.370062 1.338220
+     10.000 1.676376 1.383787 1.376410 1.345773

@@ -57,7 +57,7 @@ check_em_convergence() {
     if [ -f "$em_log" ]; then
         local max_force=$(grep "Maximum force" "$em_log" | tail -1 | awk '{print $4}')
         if [ -n "$max_force" ]; then
-            if (( $(echo "$max_force > 1000" | bc -l) )); then
+            if [ "$(echo "$max_force" | awk "{if($1>1000)print 1}")" = "1" ]; then
                 echo "[WARN] EM 未收敛 (Fmax=$max_force)"
                 echo "[AUTO-FIX] 延长 EM steps → 100000..."
                 return 1
@@ -75,8 +75,8 @@ check_nvt_stability() {
         local temp_std=$(echo "Temperature" | gmx energy -f "$nvt_edr" 2>&1 | grep "Temperature" | tail -1 | awk '{print $3}')
         
         if [ -n "$temp_avg" ] && [ -n "$temp_std" ]; then
-            local fluctuation=$(echo "scale=2; $temp_std / $temp_avg * 100" | bc)
-            if (( $(echo "$fluctuation > 5" | bc -l) )); then
+            local fluctuation=$(awk "BEGIN{printf "%.2f", ($temp_std/$temp_avg)*100}")
+            if [ "$(echo "$fluctuation" | awk "{if($1>5)print 1}")" = "1" ]; then
                 echo "[WARN] NVT 温度波动高 ($fluctuation%)"
                 echo "[AUTO-FIX] 考虑延长 NVT / 调整 tau_t"
                 return 1
@@ -94,8 +94,8 @@ check_npt_stability() {
         local dens_std=$(echo "Density" | gmx energy -f "$npt_edr" 2>&1 | grep "Density" | tail -1 | awk '{print $3}')
         
         if [ -n "$dens_avg" ] && [ -n "$dens_std" ]; then
-            local fluctuation=$(echo "scale=2; $dens_std / $dens_avg * 100" | bc)
-            if (( $(echo "$fluctuation > 2" | bc -l) )); then
+            local fluctuation=$(awk "BEGIN{printf "%.2f", ($dens_std/$dens_avg)*100}")
+            if [ "$(echo "$fluctuation" | awk "{if($1>2)print 1}")" = "1" ]; then
                 echo "[WARN] NPT 密度波动高 ($fluctuation%)"
                 echo "[AUTO-FIX] 考虑延长 NPT"
                 return 1
@@ -220,7 +220,7 @@ gmx grompp -f nvt.mdp -c ../"$INPUT_GRO" -r ../"$INPUT_GRO" -p ../"$INPUT_TOP" -
 }
 
 log "运行 NVT 模拟..."
-export OMP_NUM_THREADS=$NTOMP
+# Thread control via -ntomp flag below
 gmx mdrun -v -deffnm nvt -ntmpi 1 -ntomp $NTOMP || {
     echo "[ERROR-002] NVT 模拟失败"
     echo "Fix: Check system stability or reduce dt"
@@ -377,7 +377,7 @@ cat > EQUILIBRATION_REPORT.md << EOF
 
 ## NVT 平衡 (恒温)
 
-- **步数:** $NVT_STEPS ($(echo "scale=1; $NVT_STEPS * 0.002" | bc) ps)
+- **步数:** $NVT_STEPS ($(awk "BEGIN{printf "%.1f", $NVT_STEPS*0.002}") ps)
 - **输出文件:** nvt.gro, nvt.cpt, nvt.edr
 - **温度曲线:** nvt_temperature.xvg
 
@@ -390,7 +390,7 @@ $(tail -n 20 nvt_temperature.xvg | grep -v '^[@#]' | awk '{sum+=$2; n++} END {if
 
 ## NPT 平衡 (恒温恒压)
 
-- **步数:** $NPT_STEPS ($(echo "scale=1; $NPT_STEPS * 0.002" | bc) ps)
+- **步数:** $NPT_STEPS ($(awk "BEGIN{printf "%.1f", $NPT_STEPS*0.002}") ps)
 - **输出文件:** npt.gro, npt.cpt, npt.edr
 - **压强曲线:** npt_pressure.xvg
 - **密度曲线:** npt_density.xvg

@@ -70,7 +70,7 @@ Canonical target family:
 - `property-analysis` -> `scripts/analysis/property-analysis.sh`
 - `membrane-analysis` -> `scripts/analysis/membrane-analysis.sh`
 - `free-energy-analysis` -> `scripts/analysis/free-energy-analysis.sh`
-- `protein-analysis` -> `scripts/analysis/protein.sh`
+- `protein-analysis` -> `scripts/advanced/protein.sh`
 - `protein-special-analysis` -> `scripts/analysis/protein-special-analysis.sh`
 - `scattering-analysis` -> `scripts/analysis/scattering-analysis.sh`
 - `publication-viz` -> `scripts/visualization/publication-viz.sh`

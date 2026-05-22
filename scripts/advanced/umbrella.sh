@@ -116,7 +116,7 @@ mkdir -p "$OUTPUT_DIR"
 cd "$OUTPUT_DIR"
 
 # 计算窗口数量
-NUM_WINDOWS=$(echo "scale=0; $PULL_DISTANCE / $WINDOW_SPACING + 1" | bc)
+NUM_WINDOWS=$(awk "BEGIN{printf "%d", scale=0; $PULL_DISTANCE / $WINDOW_SPACING + 1}" )
 log "将生成 $NUM_WINDOWS 个伞状采样窗口"
 
 # ============================================
@@ -149,7 +149,7 @@ cat > pull.mdp << EOF
 ; Pull simulation for umbrella sampling
 integrator              = md
 dt                      = 0.002
-nsteps                  = $(echo "scale=0; $PULL_DISTANCE / $PULL_RATE / 0.002" | bc)
+nsteps                  = $(awk "BEGIN{printf "%.0f", ($PULL_DISTANCE / $PULL_RATE / 0.002)}" )
 
 ; Output control
 nstxout                 = 5000
@@ -222,7 +222,7 @@ gmx grompp -f pull.mdp -c ../"$INPUT_GRO" -p ../"$INPUT_TOP" -o pull.tpr -maxwar
 }
 
 log "运行拉力模拟..."
-export OMP_NUM_THREADS=$NTOMP
+# Thread control via -ntomp flag below
 gmx mdrun -v -deffnm pull -ntmpi 1 -ntomp $NTOMP -pf pullf.xvg -px pullx.xvg || {
     echo "[ERROR-002] 拉力模拟失败"
     echo "Fix: Check pull groups or reduce pull_rate"
@@ -253,7 +253,7 @@ echo "System" | gmx trjconv -s pull.tpr -f pull.xtc -o windows/conf.gro -sep || 
 # 选择均匀分布的窗口
 log "选择窗口构象..."
 TOTAL_FRAMES=$(ls windows/conf*.gro 2>/dev/null | wc -l)
-FRAME_STEP=$(echo "scale=0; $TOTAL_FRAMES / $NUM_WINDOWS" | bc)
+FRAME_STEP=$(awk "BEGIN{printf "%d", scale=0; $TOTAL_FRAMES / $NUM_WINDOWS}" )
 
 if [ "$FRAME_STEP" -lt 1 ]; then
     FRAME_STEP=1
@@ -285,7 +285,7 @@ cat > umbrella_template.mdp << EOF
 ; Umbrella sampling
 integrator              = md
 dt                      = 0.002
-nsteps                  = $(echo "scale=0; $SAMPLE_TIME / 0.002" | bc)
+nsteps                  = $(awk "BEGIN{printf "%.0f", ($SAMPLE_TIME / 0.002)}" )
 
 ; Output control
 nstxout                 = 0
@@ -358,7 +358,7 @@ for i in $(seq 0 $((window_idx - 1))); do
     log "窗口 $i: 准备模拟..."
     
     # 计算窗口中心位置
-    window_init=$(echo "scale=3; $i * $WINDOW_SPACING" | bc)
+    window_init=$(awk "BEGIN{printf "%d", scale=3; $i * $WINDOW_SPACING}" )
     
     # 生成窗口专用 MDP
     sed "s/WINDOW_INIT/$window_init/" umbrella_template.mdp > "$window_dir/umbrella.mdp"
@@ -433,7 +433,7 @@ log "生成分析报告..."
 # 提取 PMF 最小值和最大值
 PMF_MIN=$(grep -v '^[@#]' pmf.xvg | awk 'BEGIN{min=999999} {if($2<min) min=$2} END {printf "%.2f", min}')
 PMF_MAX=$(grep -v '^[@#]' pmf.xvg | awk 'BEGIN{max=-999999} {if($2>max) max=$2} END {printf "%.2f", max}')
-PMF_BARRIER=$(echo "$PMF_MAX - $PMF_MIN" | bc)
+PMF_BARRIER=$(awk "BEGIN{printf "%d", $PMF_MAX - $PMF_MIN}" )
 
 cat > UMBRELLA_REPORT.md << EOF
 # 伞状采样分析报告

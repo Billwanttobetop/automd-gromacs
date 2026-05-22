@@ -1,0 +1,48 @@
+; Free Energy / TI Lambda Window (example: lambda = 0.5)
+; Use: gmx grompp -f freeenergy.mdp -c equil.gro -t equil.cpt -p topol.top -o ti_lambda.tpr
+integrator              = md
+dt                      = 0.002
+nsteps                  = 500000    ; 1 ns per window
+
+nstxout-compressed      = 1000
+nstenergy               = 1000
+nstlog                  = 1000
+
+continuation            = yes
+constraint_algorithm    = lincs
+constraints             = h-bonds
+lincs_iter              = 1
+lincs_order             = 4
+
+cutoff-scheme           = Verlet
+nstlist                 = 10
+rcoulomb                = 1.0
+rvdw                    = 1.0
+DispCorr                = EnerPres
+
+coulombtype             = PME
+pme_order               = 4
+fourierspacing          = 0.16
+
+tcoupl                  = V-rescale
+tc-grps                 = Protein Non-Protein
+tau_t                   = 0.1     0.1
+ref_t                   = 300     300
+
+pcoupl                  = Parrinello-Rahman
+pcoupltype              = isotropic
+tau_p                   = 2.0
+ref_p                   = 1.0
+compressibility         = 4.5e-5
+
+pbc                     = xyz
+gen_vel                 = no
+
+; Free energy lambda settings
+free-energy             = yes
+init-lambda-state       = 0
+coul-lambdas            = 0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0
+vdw-lambdas             = 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0
+sc-alpha                = 0.5
+sc-power                = 1
+sc-sigma                = 0.3

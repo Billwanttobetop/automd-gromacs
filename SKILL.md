@@ -32,7 +32,7 @@ metadata:
 AutoMD-GROMACS is an AI-oriented automation toolkit for GROMACS. It packages decision-layer routing, end-to-end simulation workflows, enhanced sampling, special-system simulation, advanced analysis, and publication-ready visualization into a public OpenClaw skill with troubleshooting references.
 
 Project metadata:
-- Version: 5.0.0
+- Version: 5.0.1
 - Author: Guo Xuan
 - Organization: Hong Kong University of Science and Technology (Guangzhou)
 - Homepage: https://github.com/Billwanttobetop/automd-gromacs
@@ -48,20 +48,14 @@ Project metadata:
 
 ## Quick Start
 
-1. Read `references/SKILLS_INDEX.yaml`
-2. If the method is not chosen yet, use `scripts/decision/method-selector.py`
-3. Run the recommended script under `scripts/`
-4. If something fails, read `references/troubleshoot/<skill>-errors.md`
-
-Example:
-
-```bash
-python3 scripts/decision/method-selector.py \
-  --goal "binding free energy from a docked complex" \
-  --system-type protein-ligand \
-  --target-observable binding-free-energy \
-  --pretty
-```
+1. Read `references/SKILLS_INDEX.yaml` — structured index of all workflows
+2. If the target method is unclear, run the decision layer:
+   ```bash
+   python3 scripts/decision/method-selector.py --goal "..." --system-type "..." --target-observable "..." --pretty
+   ```
+3. Execute the recommended script (e.g. `bash scripts/advanced/freeenergy.sh --input ...`)
+4. On failure: look up the error code in the matching file under `references/troubleshoot/`
+   (e.g. freeenergy errors → `references/troubleshoot/freeenergy-errors.md`)
 
 ## Design
 
@@ -70,10 +64,11 @@ python3 scripts/decision/method-selector.py \
 - Layered disclosure for low token overhead
 - Embedded domain knowledge from GROMACS practice
 - Auto-repair and troubleshooting guidance by default
+- Reusable MDP templates in `references/templates/` (em, nvt, npt, production, membrane, freeenergy)
 
 ## Project Info
 
-- Version: 5.0.0
+- Version: 5.0.1
 - Based on: GROMACS 2026.1
 - Runtime needs: `python3`, `PyYAML`, `gmx`
 - License: MIT

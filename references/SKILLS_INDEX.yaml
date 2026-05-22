@@ -1,5 +1,5 @@
-version: 5.0.0
-base_dir: ~/.openclaw/workspace/automd-gromacs
+version: 5.0.1
+base_dir: ${SKILL_ROOT:-.}
 basic:
   setup:
     name: 系统准备
@@ -624,6 +624,34 @@ advanced:
       - 'orientation: sorient 看溶剂界面取向, densorder 看取向+空间分布'
       - 'composition: 需先确认 CHOL/POPC/POPE 等 residue naming'
       - 'workflow: 先 density/thickness, 再 order, 最后 densmap/composition'
+  property_extended:
+    name: 扩展蛋白性质分析
+    description: 偶极矩/静电势/自由体积/水合层序参数/最小距离 — 补充 GROMACS 官方分析
+    script: scripts/analysis/property-extended.sh
+    troubleshoot: references/troubleshoot/property-analysis-errors.md
+    quick_ref:
+      dependencies:
+      - gmx
+      auto_fix:
+      - index_auto_create
+      key_params:
+      - 'analyses: dipoles,potential,freevolume,h2order,mindist,sasa'
+      - 'dipoles: 总偶极矩涨落 + 介电常数估算'
+      - 'potential: 沿盒子 Z 轴静电势分布'
+      - 'freevolume: 分子体积 + 自由体积分数'
+      - 'h2order: 水分子取向序参数'
+      - 'mindist: 基团间最小距离监测'
+      common_errors:
+      - 'ERROR-001: 需要 index 文件 → auto-create via make_ndx'
+      - 'ERROR-002: 部分分析可能非致命失败 → 继续执行其余'
+      output:
+      - properties/dipoles.xvg
+      - properties/epsilon.xvg
+      - properties/potential.xvg
+      - properties/freevolume.xvg
+      - properties/h2order.xvg
+      - properties/mindist.xvg
+      - properties/PROPERTIES_REPORT.md
   free_energy_analysis:
     name: 自由能结果分析
     description: BAR/FEP、WHAM/PMF、AWH 结果整理与质量评估总控
@@ -780,6 +808,40 @@ advanced:
       - pull.xtc
       - umbrella_windows.dat
       - STEERED_MD_REPORT.md
+  accelerated_md:
+    name: 加速分子动力学
+    description: Accelerated MD - PLUMED aMD / Metadynamics 增强采样替代方案
+    script: scripts/advanced/accelerated-md.sh
+    troubleshoot: references/troubleshoot/accelerated-md-errors.md
+    quick_ref:
+      dependencies:
+      - gmx
+      - plumed
+      auto_install: true
+      auto_fix:
+      - plumed 缺失 → 自动切换到 metadynamics 方法
+      - aMD 参数 auto → 自动执行预运行计算阈值
+      - 检查点恢复
+      key_params:
+      - 'amd_method: plumed (推荐) / metadynamics (备选)'
+      - 'amd_type: dual (双加速) / dihedral (二面角) / total (总能量)'
+      - 'amd_e_dihed: auto (自动计算) / 手动指定 (kJ/mol)'
+      - 'amd_alpha_dihed: auto / 手动指定加速因子'
+      - 'amd_e_tot: auto / 手动指定总能量阈值'
+      - 'amd_alpha_tot: auto / 手动指定总能量加速因子'
+      - 'prerun_time: 100 ps (推荐预运行时间)'
+      - 'sim_time: 10-100 ns (推荐)'
+      common_errors:
+      - 'ERROR-001: PLUMED 未安装 → auto-fix 切换到 metadynamics'
+      - 'ERROR-002: GROMACS 不含 PLUMED 支持 → auto-fix 切换方法'
+      - 'ERROR-003: aMD 参数未提供 → auto-fix 执行预运行'
+      - 'ERROR-004: 预运行失败 → 手动指定参数或延长预运行时间'
+      - 'ERROR-005: 模拟崩溃 → 检查能量阈值参数'
+      output:
+      - amd.xtc
+      - amd.edr
+      - amd.log
+      - ACCELERATED_MD_REPORT.md
   electric_field:
     name: 电场模拟
     description: Electric Field - 恒定/振荡/脉冲电场模拟

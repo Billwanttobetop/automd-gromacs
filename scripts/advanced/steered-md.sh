@@ -42,7 +42,7 @@ CYLINDER_R="${CYLINDER_R:-1.5}"            # 圆柱半径(nm,cylinder几何)
 # 模拟参数
 SIM_TIME="${SIM_TIME:-1000}"               # 模拟时间(ps)
 DT="${DT:-0.002}"                          # 时间步长(ps)
-NSTEPS=$(echo "$SIM_TIME / $DT" | bc)
+NSTEPS=$(awk "BEGIN{printf "%d", $SIM_TIME / $DT}" )
 TEMPERATURE="${TEMPERATURE:-300}"          # 温度(K)
 
 # 计算资源
@@ -137,12 +137,12 @@ auto_detect_init_distance() {
         
         # 创建临时索引文件
         if [[ ! -f "$INPUT_NDX" ]]; then
-            echo -e "q\n" | gmx make_ndx -f "$INPUT_GRO" -o temp.ndx 2>&1 | grep -E "Group|nr" || true
+            printf "q\n" | gmx make_ndx -f "$INPUT_GRO" -o temp.ndx 2>&1 | grep -E "Group|nr" || true
             INPUT_NDX="temp.ndx"
         fi
         
         # 使用 gmx distance 计算初始距离
-        local dist=$(echo -e "$PULL_GROUP1\n$PULL_GROUP2\n" | \
+        local dist=$(printf "%s\n%s\n" "$PULL_GROUP1" "$PULL_GROUP2" | \
             gmx distance -s "$INPUT_GRO" -n "$INPUT_NDX" -select "com of group \"$PULL_GROUP1\"" \
             -select2 "com of group \"$PULL_GROUP2\"" 2>&1 | \
             grep "Distance" | awk '{print $2}' || echo "0.0")
@@ -161,7 +161,7 @@ validate_index_file() {
     if [[ ! -f "$INPUT_NDX" ]]; then
         log "[WARN] 索引文件不存在"
         log "[AUTO-FIX] 生成默认索引文件"
-        echo -e "q\n" | gmx make_ndx -f "$INPUT_GRO" -o index.ndx 2>&1 | tee make_ndx.log
+        printf "q\n" | gmx make_ndx -f "$INPUT_GRO" -o index.ndx 2>&1 | tee make_ndx.log
         INPUT_NDX="index.ndx"
     fi
     
@@ -220,7 +220,7 @@ generate_umbrella_windows() {
     # 计算窗口数量和间隔
     local max_dist=$(echo "$PULL_INIT + $PULL_RATE * $SIM_TIME" | bc -l)
     local window_spacing=0.1  # 0.1 nm
-    local num_windows=$(echo "($max_dist - $PULL_INIT) / $window_spacing" | bc)
+    local num_windows=$(awk "BEGIN{printf "%d", ($max_dist - $PULL_INIT) / $window_spacing}" )
     
     log "距离范围: $PULL_INIT - $max_dist nm"
     log "窗口间隔: $window_spacing nm"

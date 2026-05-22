@@ -43,7 +43,7 @@ WATER_MODEL="${WATER_MODEL:-tip3p}"        # tip3p/tip4p/spc
 # 模拟参数
 SIM_TIME="${SIM_TIME:-1000}"               # 模拟时间(ps)
 DT="${DT:-0.001}"                          # 时间步长(ps, QM/MM推荐0.5-1 fs)
-NSTEPS=$(echo "$SIM_TIME / $DT" | bc)
+NSTEPS=$(awk "BEGIN{printf "%d", $SIM_TIME / $DT}" )
 TEMPERATURE="${TEMPERATURE:-300}"          # 温度(K)
 PRESSURE="${PRESSURE:-1.0}"                # 压力(bar)
 
@@ -273,7 +273,7 @@ validate_timestep() {
         log "[WARN] 时间步长过大 ($DT ps > 1 fs)"
         log "[AUTO-FIX] 减小到 1 fs (0.001 ps)"
         DT="0.001"
-        NSTEPS=$(echo "$SIM_TIME / $DT" | bc)
+        NSTEPS=$(awk "BEGIN{printf "%d", $SIM_TIME / $DT}" )
     fi
     
     if (( $(echo "$dt_float < 0.0005" | bc -l) )); then
@@ -755,7 +755,7 @@ analyze_results() {
     
     # RMSD 分析
     if [[ -f "md.xtc" ]]; then
-        echo -e "Backbone\nBackbone" | gmx rms -s md.tpr -f md.xtc -o rmsd.xvg -tu ns 2>/dev/null || true
+        printf "Backbone\nBackbone" | gmx rms -s md.tpr -f md.xtc -o rmsd.xvg -tu ns 2>/dev/null || true
         log "[OK] RMSD 数据已提取"
     fi
     

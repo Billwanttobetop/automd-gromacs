@@ -1,0 +1,31 @@
+@ autoscale onread none
+@ with g0
+@ g0 on
+@ title "projection on eigenvectors (nm)"
+@ xaxis  label "Time (ps)"
+@ world xmin 0
+@ world xmax 10
+@ world ymin -0.667452
+@ world ymax 0.363314
+@ view xmin 0.15
+@ view xmax 0.85
+@ view ymin 0.15
+@ view ymax 0.85
+@ yaxis  label "vec 1"
+@ xaxis tick major 2.5
+@ xaxis tick minor 1.25
+@ xaxis ticklabel start type spec
+@ xaxis ticklabel start -0
+@ yaxis tick major 0.5
+@ yaxis tick minor 0.25
+@ yaxis ticklabel start type spec
+@ yaxis ticklabel start -0.5
+@ zeroxaxis bar on
+@ zeroxaxis bar linestyle 3
+    0.0000   -0.58226
+    2.0000   -0.29713
+    4.0000    0.21128
+    6.0000    0.17477
+    8.0000    0.26961
+   10.0000    0.22374
+&

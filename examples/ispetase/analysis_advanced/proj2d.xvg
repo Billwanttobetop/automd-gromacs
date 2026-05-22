@@ -1,0 +1,23 @@
+# This file was created Fri May 22 09:52:38 2026
+# Created by:
+#                :-) GROMACS - gmx anaeig, 2026.0-conda_forge (-:
+# 
+# Executable:   /root/miniconda3/bin.AVX2_256/gmx
+# Data prefix:  /root/miniconda3
+# Working dir:  /root/autodl-tmp/users/ou_a1d19d5984eecd78f231c50f774eddb0/automd-examples/ispetase/system/analysis
+# Command line:
+#   gmx anaeig -s ../production/prod.tpr -f ../production/prod.trr -v eigenvec.trr -eig eigenval.xvg -2d proj2d.xvg -first 1 -last 2
+# gmx anaeig is part of G R O M A C S:
+#
+# Gallium Rubidium Oxygen Manganese Argon Carbon Silicon
+#
+@    title "2D projection of trajectory"
+@    xaxis  label "projection on eigenvector 1 (nm)"
+@    yaxis  label "projection on eigenvector 2 (nm)"
+@TYPE xy
+  -0.58226   -0.19239
+  -0.29713    0.23762
+   0.21128    0.28829
+   0.17477    0.05779
+   0.26961   -0.54230
+   0.22374    0.15098

@@ -509,7 +509,7 @@ EOF
         # Shows spatial correlation between particles
         
         log "Running gmx rdf..."
-        echo -e "$GROUP\n$GROUP2" | gmx rdf -s "../$TPR" -f "../$TRJ" \
+        printf "%s\n%s" "$GROUP" "$GROUP2" | gmx rdf -s "../$TPR" -f "../$TRJ" \
             -o rdf.xvg -cn rdf_cn.xvg -cut "$RDF_CUTOFF" $TIME_ARGS \
             2>&1 | tee rdf.log
         

@@ -1,0 +1,34 @@
+# This file was created Fri May 22 10:12:37 2026
+# Created by:
+#              :-) GROMACS - gmx potential, 2026.0-conda_forge (-:
+# 
+# Executable:   /root/miniconda3/bin.AVX2_256/gmx
+# Data prefix:  /root/miniconda3
+# Working dir:  /root/autodl-tmp/users/ou_a1d19d5984eecd78f231c50f774eddb0/automd-examples/ispetase/system/analysis/properties
+# Command line:
+#   gmx potential -s ../../production/prod.tpr -f ../../production/prod.trr -n ../analysis.ndx -o potential.xvg
+# gmx potential is part of G R O M A C S:
+#
+# Gravel Rubs Often Many Awfully Cauterized Sores
+#
+@    title "Electrostatic Potential"
+@    xaxis  label "Average coordinate (nm)"
+@    yaxis  label "Potential (V)"
+@TYPE xy
+@ view 0.15, 0.15, 0.75, 0.85
+@ legend on
+@ legend box on
+@ legend loctype view
+@ legend 0.78, 0.8
+@ legend length 2
+@ s0 legend "Protein"
+                   0                       -0
+  0.5535005331039429      0.03572776541113853
+   1.107001066207886       0.2410211563110352
+   1.660501599311829       0.8142468333244324
+   2.214002132415771        1.618869781494141
+   2.767502546310425        2.226422786712646
+   3.321003198623657        2.719266891479492
+   3.874503612518311        3.264609813690186
+   4.428004264831543        3.557374954223633
+   4.981504917144775        3.535596132278442

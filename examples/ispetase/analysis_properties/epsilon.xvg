@@ -1,0 +1,32 @@
+# This file was created Fri May 22 10:12:37 2026
+# Created by:
+#               :-) GROMACS - gmx dipoles, 2026.0-conda_forge (-:
+# 
+# Executable:   /root/miniconda3/bin.AVX2_256/gmx
+# Data prefix:  /root/miniconda3
+# Working dir:  /root/autodl-tmp/users/ou_a1d19d5984eecd78f231c50f774eddb0/automd-examples/ispetase/system/analysis/properties
+# Command line:
+#   gmx dipoles -s ../../production/prod.tpr -f ../../production/prod.trr -n ../analysis.ndx -o dipoles.xvg -eps epsilon.xvg
+# gmx dipoles is part of G R O M A C S:
+#
+# Gravel Rubs Often Many Awfully Cauterized Sores
+#
+@    title "Epsilon and Kirkwood factors"
+@    xaxis  label "Time (ps)"
+@    yaxis  label ""
+@TYPE xy
+@ view 0.15, 0.15, 0.75, 0.85
+@ legend on
+@ legend box on
+@ legend loctype view
+@ legend 0.78, 0.8
+@ legend length 2
+@ s0 legend "epsilon"
+@ s1 legend "G\sk"
+@ s2 legend "g\sk"
+         0   1.000e+00  0.000e+00  0.000e+00
+         2   1.023e+00  1.846e-04  1.832e-04
+         4   1.068e+00  5.377e-04  5.262e-04
+         6   1.067e+00  5.281e-04  5.169e-04
+         8   1.095e+00  7.427e-04  7.212e-04
+        10   1.091e+00  7.042e-04  6.847e-04

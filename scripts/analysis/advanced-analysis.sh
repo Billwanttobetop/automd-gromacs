@@ -719,7 +719,7 @@ check_file "$INPUT_TRJ"
 mkdir -p "$OUTPUT_DIR"
 
 # 设置OpenMP线程数
-export OMP_NUM_THREADS=$NTOMP
+# Thread control via -ntomp flag below
 
 log "=========================================="
 log "GROMACS Advanced Structure Analysis"

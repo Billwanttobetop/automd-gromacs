@@ -91,7 +91,7 @@ adjust_box_size() {
     # 拉力模拟: 1.5-2.0 nm
     # 大分子: 1.2-1.5 nm
     
-    if (( $(echo "$distance < 1.0" | bc -l) )); then
+    if [ "$(echo "$distance" | awk "{if($1<1.0)print 1}")" = "1" ]; then
         echo "[AUTO-FIX] Box distance too small ($distance nm), adjusting to 1.0 nm"
         echo "1.0"
     else

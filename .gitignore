@@ -34,3 +34,42 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+
+# Development artifacts (build reports, test logs)
+*_COMPLETION.md
+*_SUMMARY.md
+*_DELIVERY.md
+*_FINAL_REPORT.md
+*-dev-report.md
+*-test-report.md
+*-test-summary.md
+*completion-summary.md
+
+# Publish and maintenance process
+PUBLISH_*.md
+CLAWHUB_PUBLISH.md
+GITHUB_PUBLISH.md
+GITHUB_SETUP.md
+FINAL_PUBLISH_SOLUTION.md
+MANUAL_PUBLISH_GUIDE.md
+SKILLHUB_*.md
+UPLOAD_CHECKLIST.md
+
+# Release notes (keep only in CHANGELOG)
+RELEASE_*.md
+RENAME_COMPLETE.md
+
+# Internal tracking
+DEVELOPMENT_*.md
+PROJECT_*.md
+TASK_COMPLETION_*.md
+TEST_*.md
+VERIFICATION.md
+WORK_LOG.md
+MAINTENANCE_*.md
+
+# Method selector standalone doc (integrated into main SKILL.md)
+method-selector-SKILL.md
+
+# ClawHub metadata
+_meta.json

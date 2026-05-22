@@ -1,0 +1,22 @@
+# This file was created Fri May 22 09:52:38 2026
+# Created by:
+#                :-) GROMACS - gmx covar, 2026.0-conda_forge (-:
+# 
+# Executable:   /root/miniconda3/bin.AVX2_256/gmx
+# Data prefix:  /root/miniconda3
+# Working dir:  /root/autodl-tmp/users/ou_a1d19d5984eecd78f231c50f774eddb0/automd-examples/ispetase/system/analysis
+# Command line:
+#   gmx covar -s ../production/prod.tpr -f ../production/prod.trr -o eigenval.xvg -v eigenvec.trr -xpma covar.xpm
+# gmx covar is part of G R O M A C S:
+#
+# Gallium Rubidium Oxygen Manganese Argon Carbon Silicon
+#
+@    title "Eigenvalues of the covariance matrix"
+@    xaxis  label "Eigenvector index"
+@    yaxis  label "(nm\S2\N)"
+@TYPE xy
+         1 0.104207
+         2 0.0828019
+         3 0.0647795
+         4 0.0480455
+         5 0.0419093

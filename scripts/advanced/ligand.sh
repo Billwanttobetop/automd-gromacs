@@ -303,7 +303,7 @@ EOF
 
 log "运行能量最小化..."
 gmx grompp -f em.mdp -c complex_ions.gro -p topol.top -o em.tpr -maxwarn 2 || error "[ERROR-008] em grompp 失败"
-export OMP_NUM_THREADS=$NTOMP
+# Thread control via -ntomp flag below
 gmx mdrun -v -deffnm em -ntmpi 1 -ntomp $NTOMP || error "[ERROR-009] 能量最小化失败"
 
 log "能量最小化完成"
@@ -479,7 +479,7 @@ pbc                     = xyz
 gen_vel                 = no
 EOF
 
-    log "运行生产模拟 ($(echo "scale=1; $MD_STEPS * 0.002 / 1000" | bc) ns)..."
+    log "运行生产模拟 ($(awk "BEGIN{printf "%.1f", ($MD_STEPS * 0.002 / 1000)}" ) ns)..."
     gmx grompp -f md.mdp -c npt.gro -t npt.cpt -p topol.top -o md.tpr -maxwarn 2 || error "[ERROR-014] md grompp 失败"
     gmx mdrun -v -deffnm md -ntmpi 1 -ntomp $NTOMP || error "[ERROR-015] 生产运行失败"
     
@@ -516,9 +516,9 @@ cat > LIGAND_BINDING_REPORT.md << EOF
 - **温度:** $TEMPERATURE K
 - **压强:** $PRESSURE bar
 - **能量最小化:** $EM_STEPS 步
-- **NVT 平衡:** $NVT_STEPS 步 ($(echo "scale=1; $NVT_STEPS * 0.002" | bc) ps)
-- **NPT 平衡:** $NPT_STEPS 步 ($(echo "scale=1; $NPT_STEPS * 0.002" | bc) ps)
-- **生产运行:** $MD_STEPS 步 ($(echo "scale=1; $MD_STEPS * 0.002 / 1000" | bc) ns)
+- **NVT 平衡:** $NVT_STEPS 步 ($(awk "BEGIN{printf "%.1f", ($NVT_STEPS * 0.002)}" ) ps)
+- **NPT 平衡:** $NPT_STEPS 步 ($(awk "BEGIN{printf "%.1f", ($NPT_STEPS * 0.002)}" ) ps)
+- **生产运行:** $MD_STEPS 步 ($(awk "BEGIN{printf "%.1f", ($MD_STEPS * 0.002 / 1000)}" ) ns)
 
 ---
 

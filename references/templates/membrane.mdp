@@ -1,0 +1,40 @@
+; Membrane Protein Production (semi-isotropic pressure coupling)
+; Use: gmx grompp -f membrane.mdp -c npt.gro -t npt.cpt -p topol.top -o prod.tpr
+integrator              = md
+dt                      = 0.002
+nsteps                  = 50000000  ; 100 ns
+
+nstxout-compressed      = 5000
+nstenergy               = 5000
+nstlog                  = 5000
+
+continuation            = yes
+constraint_algorithm    = lincs
+constraints             = h-bonds
+lincs_iter              = 1
+lincs_order             = 4
+
+cutoff-scheme           = Verlet
+nstlist                 = 10
+rcoulomb                = 1.0
+rvdw                    = 1.0
+DispCorr                = EnerPres
+
+coulombtype             = PME
+pme_order               = 4
+fourierspacing          = 0.16
+
+tcoupl                  = V-rescale
+tc-grps                 = Protein Membrane Non-Protein
+tau_t                   = 0.1     0.1      0.1
+ref_t                   = 310     310      310
+
+; Semi-isotropic: XY coupled, Z independent
+pcoupl                  = Parrinello-Rahman
+pcoupltype              = semiisotropic
+tau_p                   = 2.0     2.0
+ref_p                   = 1.0     1.0
+compressibility         = 4.5e-5  4.5e-5
+
+pbc                     = xyz
+gen_vel                 = no

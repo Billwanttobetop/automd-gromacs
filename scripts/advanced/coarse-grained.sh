@@ -369,7 +369,7 @@ EOF
 run_nvt() {
     log "Phase 4: NVT平衡"
     
-    local nvt_steps=$(echo "$NVT_TIME / $DT" | bc)
+    local nvt_steps=$(awk "BEGIN{printf "%d", $NVT_TIME / $DT}" )
     
     cat > nvt.mdp << EOF
 ; NVT Equilibration for Coarse-Grained System
@@ -428,7 +428,7 @@ EOF
 run_npt() {
     log "Phase 5: NPT平衡"
     
-    local npt_steps=$(echo "$NPT_TIME / $DT" | bc)
+    local npt_steps=$(awk "BEGIN{printf "%d", $NPT_TIME / $DT}" )
     
     cat > npt.mdp << EOF
 ; NPT Equilibration for Coarse-Grained System
@@ -492,7 +492,7 @@ EOF
 run_production() {
     log "Phase 6: 生产模拟"
     
-    local prod_steps=$(echo "$SIM_TIME / $DT" | bc)
+    local prod_steps=$(awk "BEGIN{printf "%d", $SIM_TIME / $DT}" )
     
     cat > md.mdp << EOF
 ; Production MD for Coarse-Grained System

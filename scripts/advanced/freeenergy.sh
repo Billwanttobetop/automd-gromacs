@@ -388,7 +388,7 @@ cat > REPORT.md << EOF
 
 ## 结果
 - **ΔG = $DELTA_G ± $ERROR kJ/mol**
-- **ΔG = $(echo "scale=2; $DELTA_G / 4.184" | bc) ± $(echo "scale=2; $ERROR / 4.184" | bc) kcal/mol**
+- **ΔG = $(awk "BEGIN{printf "%.2f", ($DELTA_G / 4.184)}" ) ± $(awk "BEGIN{printf "%.2f", ($ERROR / 4.184)}" ) kcal/mol**
 
 ## 文件
 - BAR 分析: analysis/bar.xvg
