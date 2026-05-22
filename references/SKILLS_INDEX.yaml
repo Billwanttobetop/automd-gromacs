@@ -1,4 +1,4 @@
-version: 5.1.0
+version: 5.1.1
 base_dir: ${SKILL_ROOT:-.}
 master_workflow:
   name: 统一主控

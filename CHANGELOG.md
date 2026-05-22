@@ -55,3 +55,24 @@
 ### Fixed
 - GROMACS 2026 conda-forge selection bug workaround (msd, distance, chi)
 - analysis-extended.sh: absolute path resolution before cd into output dir
+
+## [5.1.1] - 2026-05-22 (Native GROMACS Analysis)
+
+### Added
+- `scripts/analysis/native-analysis.sh`: Pure GROMACS 2026 native analysis
+  - `gmx msd -sel`: MSD + diffusion (fixed from v5.0.1 Python workaround)
+  - `gmx pairdist -ref/-sel`: Residue COM distance tracking
+  - `gmx chi`: Full chi angle analysis with per-residue-type histograms
+- All native commands verified on ISPETase trajectory
+
+### Fixed
+- GROMACS 2026 conda-forge selection bug diagnosis: was incorrect syntax, not a build bug
+- Correct syntax for GROMACS 2026:
+  - `gmx msd -sel 'atomname CA'` ✅
+  - `gmx pairdist -ref 'res_cog of resnr N' -sel 'res_cog of resnr M'` ✅
+  - `gmx chi` (auto-detects protein, no input needed) ✅
+- `gmx nmeig` still requires special hessian setup → Python fallback retained
+
+### Deprecated
+- Python py/msd.py, py/distance.py, py/chi.py: retained as fallbacks only
+- Preferred path: `native-analysis.sh` (faster, richer output)
