@@ -1,0 +1,11 @@
+@ title "Distance: Residues 206-237"
+@ xaxis label "Time (ps)"
+@ yaxis label "Distance (nm)"
+@TYPE xy
+@ s0 legend "d(206-237)"
+    0.000000      0.444685
+    2.000000      0.452430
+    4.000000      0.447178
+    6.000000      0.451023
+    8.000000      0.484808
+   10.000000      0.416674

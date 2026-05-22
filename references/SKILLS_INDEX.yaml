@@ -1,5 +1,32 @@
-version: 5.0.1
+version: 5.1.0
 base_dir: ${SKILL_ROOT:-.}
+master_workflow:
+  name: 统一主控
+  description: 单命令端到端MD工作流，自动检测体系状态+断点续跑+全自动分析
+  script: automd-master.sh
+  features:
+    - auto_detect: pdb/topology/prepared 三状态自动识别
+    - checkpoint_resume: 自动检测.cpt智能续跑
+    - phase_skip: 已完成阶段跳过
+    - integrated_analysis: 自动RMSD/RMSF/Rg/PCA/聚类
+smart_production:
+  name: 智能生产
+  description: 断点续跑+实时监控+自动调参
+  script: scripts/basic/smart-production.sh
+  features:
+    - auto_checkpoint: 检测.cpt续跑,完工跳过
+    - realtime_monitor: 每30s报告step+ns/day
+    - auto_cores: 自动检测CPU核数
+analysis_extended:
+  name: 扩展分析(Python)
+  description: MSD/残基距离/Chi角 — 用MDAnalysis替代GROMACS2026 conda-forge的selection bug
+  script: scripts/analysis/analysis-extended.sh
+  dependencies: [MDAnalysis, numpy, tidynamics]
+  modules:
+    - msd: 均方位移+扩散系数D
+    - distance: 残基COM距离时间序列
+    - chi: Chi1/Chi2侧链二面角
+
 basic:
   setup:
     name: 系统准备

@@ -1,0 +1,18 @@
+@ title "Mean Squared Displacement"
+@ xaxis label "Time (ps)"
+@ yaxis label "MSD (nm\S2\N)"
+@TYPE xy
+@ view 0.15, 0.15, 0.75, 0.85
+@ legend on
+@ legend box on
+@ legend loctype view
+@ legend 0.78, 0.8
+@ legend length 2
+@ s0 legend "MSD"
+@ s1 legend "D = 0.0001 x 10\S-5\N cm\S2\N/s"
+    0.000000     -0.000000
+    2.000000      0.050552
+    4.000000      0.063106
+    6.000000      0.083960
+    8.000000      0.124038
+   10.000000      0.241605

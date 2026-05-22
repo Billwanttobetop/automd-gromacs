@@ -37,3 +37,21 @@
 - Visualization: publication-ready plotting (Nature/Science/Cell styles)
 - Token-optimized troubleshooting references for every workflow
 - Quick reference parameters embedded in each script
+
+## [5.1.0] - 2026-05-22 (Unified Workflow + Python Analysis Engine)
+
+### Added
+- `automd-master.sh`: Unified master controller — single command for end-to-end MD
+  - Auto-detects system state (pdb/topology/prepared)
+  - Automatic checkpoint resume
+  - Integrated basic analysis (RMSD/RMSF/Rg/PCA/clustering)
+- `scripts/basic/smart-production.sh`: Enhanced production with checkpoint resume + real-time monitoring
+- `scripts/analysis/analysis-extended.sh`: Bash wrapper for Python analysis modules
+- `scripts/analysis/py/msd.py`: Python MSD analysis (MDAnalysis — bypasses GROMACS 2026 selection bug)
+- `scripts/analysis/py/distance.py`: Residue pair distance tracking
+- `scripts/analysis/py/chi.py`: Chi1/Chi2 side-chain dihedral angle analysis
+- All 3 Python modules verified on ISPETase trajectory
+
+### Fixed
+- GROMACS 2026 conda-forge selection bug workaround (msd, distance, chi)
+- analysis-extended.sh: absolute path resolution before cd into output dir
