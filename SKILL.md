@@ -32,15 +32,41 @@ metadata:
 AutoMD-GROMACS is an AI-oriented automation toolkit for GROMACS. It packages decision-layer routing, end-to-end simulation workflows, enhanced sampling, special-system simulation, advanced analysis, and publication-ready visualization into a public OpenClaw skill with troubleshooting references.
 
 Project metadata:
-- Version: 5.1.1
+- Version: 5.3.0
 - Author: Guo Xuan
 - Organization: Hong Kong University of Science and Technology (Guangzhou)
+- Contributors: 实验室小精灵 (GPU installation, ligand topology, cross-forcefield workflow)
 - Homepage: https://github.com/Billwanttobetop/automd-gromacs
+
+## ⚠️ AI Assistant Rules — MUST READ BEFORE ANY WORK
+
+**All AI assistants using this skill MUST follow these rules before executing any computation:**
+
+1. **Create experiment log FIRST** — Before running any simulation (MD, QM, etc.), create or append to an experiment log file (`EXPT_LOG.md`) in the working directory. Record:
+   - Date, time, and purpose of the experiment
+   - Key parameters and settings
+   - Expected duration and output
+
+2. **Create experiment plan FIRST** — Before starting any long-running task (>1 hour), create a `PLAN.md` with:
+   - Clear objectives and phases
+   - Timeline estimates
+   - Risk assessment and fallback strategies
+   - Expected deliverables
+
+3. **Update logs after EVERY significant event** — Record completion, failure, parameter changes, and decisions.
+
+4. **Why this matters:** MD/QM calculations run for hours to days. AI session context gets cleared between sessions. Without proper experiment logs, progress is lost and work is duplicated. The experiment log is the single source of truth.
+
+5. **File naming convention:**
+   - `EXPT_LOG.md` — chronological experiment log
+   - `PLAN.md` — experiment plan and timeline (update status: ✅/🔄/⏳/❌)
 
 ## Scope
 
 - Decision layer: method routing before execution via `method-selector`
 - Core workflow: setup, equilibration, production, preprocessing, utilities
+- **GPU acceleration:** source-build installation, GPU MD execution, performance tuning, CUDA setup
+- **Ligand topology:** acpype + GAFF2 workflow, cross-forcefield system construction (AMBER protein + GAFF ligand)
 - Enhanced sampling: umbrella, free energy, replica exchange, metadynamics, steered MD, enhanced sampling, accelerated MD
 - Special systems: membrane, ligand, coarse-grained, electric field, non-equilibrium, QM/MM
 - Validation and analysis: trajectory, binding, property, membrane, scattering, free-energy, protein-focused analyses
@@ -68,10 +94,17 @@ Project metadata:
 
 ## Project Info
 
-- Version: 5.1.1
-- Based on: GROMACS 2026.1
+- Version: 5.2.0
+- Based on: GROMACS 2025.4 - 2026.1
 - Runtime needs: `python3`, `PyYAML`, `gmx`
 - License: MIT
 - Homepage: https://github.com/Billwanttobetop/automd-gromacs
+
+## GPU & Ligand Quick References
+
+- **GPU 源码编译安装:** `read references/gpu/gpu-installation.md`
+- **GPU MD 运行避坑:** `read references/gpu/gpu-md-execution.md`
+- **配体 GAFF2 拓扑生成:** `read references/gpu/ligand-topology.md`
+- **跨力场体系构建:** `read references/gpu/cross-forcefield-system.md`
 
 **Get started:** `read references/SKILLS_INDEX.yaml`

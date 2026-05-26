@@ -1,5 +1,48 @@
-version: 5.1.1
+version: 5.2.0
 base_dir: ${SKILL_ROOT:-.}
+
+# ============================================================
+# GPU Acceleration & Ligand Topology (v5.2 新增)
+# ============================================================
+gpu:
+  installation:
+    name: GPU GROMACS 源码编译安装
+    description: 从源码编译 GPU 加速版 GROMACS，含 CUDA Toolkit 配置
+    reference: references/gpu/gpu-installation.md
+    key_topics:
+      - CUDA_toolkit_setup
+      - CMake_version_requirements
+      - CUDA_architecture_selection (sm_120 Blackwell 等)
+      - FFTW_auto_build
+      - env_script_creation
+  execution:
+    name: GPU MD 运行避坑指南
+    description: GPU 加速策略、各阶段兼容性、OMP 冲突、性能调优
+    reference: references/gpu/gpu-md-execution.md
+    key_topics:
+      - GPU_PME_EM_incompatibility
+      - OMP_NUM_THREADS_conflict
+      - background_nohup_execution
+      - performance_benchmarks
+  ligand_topology:
+    name: 配体 GAFF2 拓扑生成
+    description: acpype + obabel + GAFF2 完整工作流，含库依赖修复
+    reference: references/gpu/ligand-topology.md
+    key_topics:
+      - acpype_installation_and_library_fixes
+      - MOL2_generation_with_obabel
+      - GAFF2_vs_CGenFF_selection
+      - charge_method_comparison
+  cross_forcefield:
+    name: 跨力场复合物体系构建
+    description: AMBER蛋白 + GAFF配体统一拓扑，含 include 顺序铁律
+    reference: references/gpu/cross-forcefield-system.md
+    key_topics:
+      - topology_include_order (defaults→atomtypes→moleculetype)
+      - duplicate_include_detection
+      - insert_molecules_workflow
+      - forcefield_compatibility_matrix
+
 master_workflow:
   name: 统一主控
   description: 单命令端到端MD工作流，自动检测体系状态+断点续跑+全自动分析

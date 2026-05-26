@@ -15,6 +15,9 @@
 - [ERROR-007](#error-007) - genion 失败
 - [ERROR-008](#error-008) - grompp (EM) 失败
 - [ERROR-009](#error-009) - 能量最小化失败
+- [ERROR-010](#error-010) - 跨力场拓扑重复 include
+- [ERROR-011](#error-011) - GPU PME 不支持非动力学积分器
+- [ERROR-012](#error-012) - OMP_NUM_THREADS 冲突
 
 ---
 
@@ -370,6 +373,111 @@ emstep = 0.001     # 减小步长
 - [ ] 势能 < -100,000 kJ/mol (取决于系统大小)
 - [ ] 没有 LINCS 警告
 - [ ] 最大力 < 1000 kJ/mol/nm
+
+---
+
+---
+
+## ERROR-010: 跨力场拓扑重复 include
+
+### 症状
+
+**"Found a second defaults directive"**
+```
+Fatal error: Syntax error - File forcefield.itp, line 15
+Last line read: '[ defaults ]'
+Invalid order for directive defaults
+```
+
+**"moleculetype SOL is redefined"**
+```
+ERROR 1 [file tip3p.itp, line 3]: moleculetype SOL is redefined
+```
+
+### 原因
+
+构建蛋白+配体跨力场体系时，`system.top` 和 `protein_body.itp` 都 include 了 forcefield.itp，导致 `[ defaults ]` 和 `[ moleculetype SOL ]` 重复。
+
+### 解决方案
+
+```bash
+# 从蛋白拓扑中删除重复的 include 行
+sed -e '/#include.*forcefield/d' \
+    -e '/#include.*tip3p/d' \
+    -e '/#include.*ions/d' \
+    -e '/#include.*posre/d' \
+    protein/protein_topol.top > protein_clean.itp
+
+# system.top 只 include 一次 forcefield/water/ions
+# 详细操作见 references/gpu/cross-forcefield-system.md
+```
+
+**GROMACS include 顺序铁律：**
+```
+[ defaults ]       ← 强制最先，只能一次
+[ atomtypes ]      ← 可用多次，累加新 atomtype
+[ moleculetype ]   ← 每分子一次
+[ system ]         ← 只能一次，最后
+[ molecules ]      ← 只能一次，最后
+```
+
+---
+
+## ERROR-011: GPU PME 不支持非动力学积分器
+
+### 症状
+```
+Fatal error:
+Inconsistency in user input:
+Cannot compute PME interactions on a GPU, because:
+  PME GPU does not support:
+    Non-dynamical integrator (use md, sd, etc).
+```
+
+### 原因
+
+能量最小化使用 `integrator = steep`，GPU PME 只支持 MD/SD 等动力学积分器。
+
+### 解决方案
+
+```bash
+# EM 阶段：只用 -nb gpu，不用 -pme gpu / -bonded gpu / -update gpu
+gmx mdrun -deffnm em -nb gpu -ntmpi 1 -ntomp 16
+
+# MD 阶段：全部 GPU 加速
+gmx mdrun -deffnm md -nb gpu -pme gpu -bonded gpu -update gpu -ntmpi 1 -ntomp 8
+```
+
+**各阶段 GPU 兼容性：**
+| 阶段 | `-nb gpu` | `-pme gpu` | `-bonded gpu` | `-update gpu` |
+|------|:---------:|:----------:|:-------------:|:-------------:|
+| EM   | ✅ | ❌ | ❌ | ❌ |
+| NVT  | ✅ | ✅ | ✅ | ✅ |
+| NPT  | ✅ | ✅ | ✅ | ✅ |
+| MD   | ✅ | ✅ | ✅ | ✅ |
+
+---
+
+## ERROR-012: OMP_NUM_THREADS 冲突
+
+### 症状
+```
+Fatal error:
+Environment variable OMP_NUM_THREADS (13) and the number of
+threads requested on the command line (8) have different values.
+```
+
+### 解决方案
+
+```bash
+# 方案 A: 取消环境变量（推荐）
+unset OMP_NUM_THREADS
+gmx mdrun ... -ntomp 8
+
+# 方案 B: 匹配
+unset OMP_NUM_THREADS
+# 或在启动脚本开头加 unset OMP_NUM_THREADS
+```
 
 ---
 
