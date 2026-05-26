@@ -100,11 +100,12 @@ Project metadata:
 - License: MIT
 - Homepage: https://github.com/Billwanttobetop/automd-gromacs
 
-## GPU & Ligand Quick References
+## GPU, Ligand & ORCA Quick References
 
 - **GPU 源码编译安装:** `read references/gpu/gpu-installation.md`
 - **GPU MD 运行避坑:** `read references/gpu/gpu-md-execution.md`
 - **配体 GAFF2 拓扑生成:** `read references/gpu/ligand-topology.md`
 - **跨力场体系构建:** `read references/gpu/cross-forcefield-system.md`
+- **ORCA 多核并行 (OpenMPI):** `read references/troubleshoot/qmmm-errors.md` → ERROR-011
 
 **Get started:** `read references/SKILLS_INDEX.yaml`

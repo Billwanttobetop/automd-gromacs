@@ -510,6 +510,66 @@ gmx mdrun -deffnm md -cpi md.cpt -append
 
 ---
 
+## ERROR-011: ORCA 多核并行失败 (OpenMPI)
+
+### 症状
+```
+mpirun has detected an attempt to run as root.
+ORCA finished by error termination in Startup
+```
+或 ORCA 使用 `%pal nprocs N end` (N>1) 时卡死无输出
+
+### 原因 (按优先级排查)
+
+1. **Root 权限被 OpenMPI 拒绝** — 最常见原因
+2. **主机名不在 /etc/hosts** — Docker/AutoDL 容器通病
+3. **Docker 容器缺少 SYS_PTRACE capability** — 底层限制
+
+### 解决方案
+
+#### Fix 1: 允许 root 运行 MPI
+```bash
+export OMPI_ALLOW_RUN_AS_ROOT=1
+export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+# 建议写入 ~/.bashrc 持久化
+```
+
+#### Fix 2: 添加主机名到 /etc/hosts
+```bash
+echo "127.0.0.1 $(hostname)" >> /etc/hosts
+# 验证: ping -c1 $(hostname)
+```
+> ⚠️ 这一步对 AutoDL/Docker 容器至关重要！容器主机名是动态的，
+> 不在 /etc/hosts 中会导致 OpenMPI 进程间无法通信。
+
+#### Fix 3: Docker 容器需要 --cap-add=SYS_PTRACE
+如果在容器内完成 Fix 1+2 后 mpirun 仍卡死：
+```bash
+# 测试: timeout 5 mpirun -np 2 hostname
+# 如果卡死 → 容器缺少 SYS_PTRACE capability
+```
+**需要容器管理员**在启动时添加：
+```bash
+docker run --cap-add=SYS_PTRACE ...
+```
+如果无法修改容器权限，只能使用单核模式 (`%pal nprocs 1 end`)
+
+### 完整环境配置 (推荐写入 ~/.bashrc)
+```bash
+# === ORCA 6.0 MPI 环境 ===
+export ORCA_DIR=/path/to/orca_6_0_1
+export PATH=$ORCA_DIR:$PATH
+export LD_LIBRARY_PATH=$ORCA_DIR/lib:$LD_LIBRARY_PATH
+export OMPI_ALLOW_RUN_AS_ROOT=1
+export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+```
+
+### 参考
+- [ORCA 6.0 Manual - Calling the Program (Serial and Parallel)](https://www.faccts.de/docs/orca/6.0/manual/contents/parallel.html)
+- [OpenMPI FAQ: Running as root](https://www.open-mpi.org/faq/?category=running#running-as-root)
+
+---
+
 ## 性能优化
 
 ### 1. 减小 QM 区域
