@@ -1,5 +1,33 @@
 # Changelog
 
+## [5.3.1] - 2026-05-29
+
+### Added
+- ORCA OpenMPI parallel troubleshooting (ERROR-011)
+- QM/MM error references (`references/troubleshoot/qmmm-errors.md`)
+
+## [5.3.0] - 2026-05-28
+
+### Added
+- AI experiment log/plan rules: mandatory `EXPT_LOG.md` and `PLAN.md` before any computation
+- GPU references: cross-forcefield system building, GPU installation, GPU MD execution, ligand topology
+  - `references/gpu/cross-forcefield-system.md`
+  - `references/gpu/gpu-installation.md`
+  - `references/gpu/gpu-md-execution.md`
+  - `references/gpu/ligand-topology.md`
+- Troubleshooting: setup errors (`references/troubleshoot/setup-errors.md`)
+- SKILLS_INDEX expanded with GPU and troubleshooting entries
+
+### Changed
+- Enhanced AI assistant rules with mandatory experiment documentation
+- Updated GPU-related guidance throughout workflows
+
+## [5.2.0] - 2026-05-25
+
+### Changed
+- Based on GROMACS 2025.4 - 2026.1
+- Runtime dependency updates
+
 ## [5.0.1] - 2026-05-22
 
 ### Added
