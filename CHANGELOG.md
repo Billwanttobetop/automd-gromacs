@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.3.2] - 2026-06-01
+
+### Security (ClawHub audit remediation)
+- **Command injection fixed** in `scripts/utils/utils.sh` (extract) and `scripts/utils/preprocess.sh` — replaced unsafe `$CMD` string concatenation with bash arrays (`"${cmd_arr[@]}"`)
+- **aMD silent fallback removed** in `scripts/advanced/accelerated-md.sh` — PLUMED absence is now fatal by default; metadynamics fallback requires explicit `AUTOMD_AMD_ALLOW_FALLBACK=1`; fallback report now includes a prominent warning banner
+- **Auto-install gated** in `scripts/advanced/ligand.sh`, `membrane.sh`, `freeenergy.sh`, `coarse-grained.sh` — `auto_install_dependencies()` now respects `AUTOMD_AUTO_INSTALL` (default: 0/off), shows missing tools and install instructions instead of silently modifying the host
+- **Troubleshoot logging disabled by default** in `references/guides/troubleshoot-escalation.md` — requires `AUTOMD_TROUBLESHOOT_LOG=1`; log directory moved from `~/.gromacs_troubleshoot_log/` to `./automd-troubleshoot-log/` for user visibility
+
 ## [5.3.1] - 2026-05-29
 
 ### Added

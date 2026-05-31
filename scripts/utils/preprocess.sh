@@ -95,11 +95,11 @@ if [[ -z "$OUTPUT" ]]; then
     OUTPUT="${base}.tpr"
 fi
 
-# Build grompp command
-CMD="gmx grompp -f $MDP -c $COORD -p $TOPOL -o $OUTPUT -maxwarn $MAXWARN"
-[[ -n "$INDEX" ]] && CMD="$CMD -n $INDEX"
-[[ -n "$RESTRAINT" ]] && CMD="$CMD -r $RESTRAINT"
-[[ -n "$CHECKPOINT" ]] && CMD="$CMD -t $CHECKPOINT"
+# Build grompp command as array (safer: no shell injection)
+local cmd_arr=(gmx grompp -f "$MDP" -c "$COORD" -p "$TOPOL" -o "$OUTPUT" -maxwarn "$MAXWARN")
+[[ -n "$INDEX" ]]      && cmd_arr+=(-n "$INDEX")
+[[ -n "$RESTRAINT" ]]  && cmd_arr+=(-r "$RESTRAINT")
+[[ -n "$CHECKPOINT" ]] && cmd_arr+=(-t "$CHECKPOINT")
 
 # Pre-flight checks (unless --quick)
 if [[ $QUICK -eq 0 ]]; then
@@ -117,8 +117,8 @@ if [[ $QUICK -eq 0 ]]; then
 fi
 
 # Run grompp
-echo "Running: $CMD"
-if $CMD 2>&1 | tee grompp.log; then
+echo "Running: ${cmd_arr[*]}"
+if "${cmd_arr[@]}" 2>&1 | tee grompp.log; then
     echo "✓ TPR created: $OUTPUT"
     
     # Show key info

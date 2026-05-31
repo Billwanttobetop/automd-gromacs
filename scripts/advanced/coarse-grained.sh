@@ -160,6 +160,14 @@ validate_timestep() {
 check_martinize() {
     if ! command -v martinize2 &> /dev/null && ! command -v martinize.py &> /dev/null; then
         log "[WARN] martinize工具未找到"
+        
+        if [[ "${AUTOMD_AUTO_INSTALL:-0}" != "1" ]]; then
+            log "[ERROR] martinize 不可用"
+            log "[INFO] 手动安装: pip3 install vermouth-martinize"
+            log "[INFO] 或设 AUTOMD_AUTO_INSTALL=1 启用自动安装"
+            error "martinize not available — install it or set AUTOMD_AUTO_INSTALL=1"
+        fi
+        
         log "[AUTO-FIX] 尝试安装martinize2..."
         
         if command -v pip3 &> /dev/null; then

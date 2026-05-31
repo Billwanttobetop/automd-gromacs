@@ -19,6 +19,7 @@ OUTPUT_DIR="${OUTPUT_DIR:-accelerated-md}"
 
 # aMD 实现方法
 AMD_METHOD="${AMD_METHOD:-plumed}"  # plumed/metadynamics
+AMD_FALLBACK=0  # 是否从 plumed 回退到 metadynamics (由 check_plumed 设置)
 
 # aMD 类型
 AMD_TYPE="${AMD_TYPE:-dual}"  # dual/dihedral/total
@@ -65,20 +66,38 @@ check_file() {
 # ============================================
 
 # 检查 PLUMED
+# By default, PLUMED absence is fatal. Set AUTOMD_AMD_ALLOW_FALLBACK=1 to allow
+# metadynamics substitute (with explicit disclosure in the report).
 check_plumed() {
     if [[ "$AMD_METHOD" == "plumed" ]]; then
         if ! command -v plumed &> /dev/null; then
             log "[WARN] PLUMED 未安装"
-            log "[AUTO-FIX] 切换到 metadynamics 方法"
-            AMD_METHOD="metadynamics"
-            return 1
+            if [[ "${AUTOMD_AMD_ALLOW_FALLBACK:-0}" == "1" ]]; then
+                log "[FALLBACK] AUTOMD_AMD_ALLOW_FALLBACK=1 — 切换到 metadynamics"
+                log "[WARNING] ⚠️ 结果并非真正的 aMD！报告中将显式标注"
+                AMD_METHOD="metadynamics"
+                AMD_FALLBACK=1
+                return 1
+            fi
+            log "[ERROR] PLUMED 不可用，aMD 无法执行"
+            log "[INFO] 要使用 metadynamics 替代方案，请设 AUTOMD_AMD_ALLOW_FALLBACK=1"
+            log "[INFO] 或安装 PLUMED: conda install -c conda-forge plumed"
+            error "PLUMED not available — accelerated MD requires PLUMED"
         fi
         
         if ! gmx mdrun -h 2>&1 | grep -q "plumed"; then
             log "[WARN] GROMACS 未编译 PLUMED 支持"
-            log "[AUTO-FIX] 切换到 metadynamics 方法"
-            AMD_METHOD="metadynamics"
-            return 1
+            if [[ "${AUTOMD_AMD_ALLOW_FALLBACK:-0}" == "1" ]]; then
+                log "[FALLBACK] AUTOMD_AMD_ALLOW_FALLBACK=1 — 切换到 metadynamics"
+                log "[WARNING] ⚠️ 结果并非真正的 aMD！报告中将显式标注"
+                AMD_METHOD="metadynamics"
+                AMD_FALLBACK=1
+                return 1
+            fi
+            log "[ERROR] GROMACS 未编译 PLUMED 支持，aMD 无法执行"
+            log "[INFO] 要使用 metadynamics 替代方案，请设 AUTOMD_AMD_ALLOW_FALLBACK=1"
+            log "[INFO] 或重新编译 GROMACS 并启用 PLUMED"
+            error "GROMACS compiled without PLUMED — accelerated MD requires PLUMED"
         fi
         
         log "[OK] PLUMED 版本: $(plumed --version | head -1)"
@@ -525,6 +544,23 @@ log "Phase 6: 生成报告"
 cat > AMD_REPORT.md << EOFREPORT
 # Accelerated MD 模拟报告
 
+$( [[ "$AMD_FALLBACK" == "1" ]] && cat << 'FALLBACK_BANNER'
+⚠️ ═══════════════════════════════════════════════════════
+⚠️  重要警告: 本次运行使用了 Metadynamics 替代方案
+⚠️
+⚠️  PLUMED 不可用，已回退到 well-tempered metadynamics。
+⚠️  此结果并非真正的 Accelerated MD！
+⚠️  - 采样机制不同 (metadynamics vs aMD 偏置势)
+⚠️  - 重加权方法不同
+⚠️  - 与文献比较时请注意方法差异
+⚠️
+⚠️  要运行真正的 aMD，请安装 PLUMED：
+⚠️    conda install -c conda-forge plumed
+⚠️  或重新编译 GROMACS 启用 PLUMED 支持。
+⚠️ ═══════════════════════════════════════════════════════
+
+FALLBACK_BANNER
+)
 ## 模拟参数
 
 - **方法**: $AMD_METHOD

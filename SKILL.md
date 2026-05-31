@@ -32,7 +32,7 @@ metadata:
 AutoMD-GROMACS is an AI-oriented automation toolkit for GROMACS. It packages decision-layer routing, end-to-end simulation workflows, enhanced sampling, special-system simulation, advanced analysis, and publication-ready visualization into a public OpenClaw skill with troubleshooting references.
 
 Project metadata:
-- Version: 5.3.1
+- Version: 5.3.2
 - Author: Guo Xuan
 - Organization: Hong Kong University of Science and Technology (Guangzhou)
 - Contributors: 实验室小精灵 (GPU installation, ligand topology, cross-forcefield workflow)

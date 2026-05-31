@@ -422,27 +422,37 @@ vim /root/.openclaw/workspace/gromacs-resources/gromacs-2026.1/src/gromacs/gmxan
 
 ### 记录查找路径
 
-**创建日志文件:**
+**⚠️ 隐私提示：日志功能默认关闭，避免记录用户行为模式。**
+**如需启用排错日志分析，设 `AUTOMD_TROUBLESHOOT_LOG=1`。**
+
+**创建日志文件（仅当启用时）:**
 ```bash
-mkdir -p ~/.gromacs_troubleshoot_log
+if [[ "${AUTOMD_TROUBLESHOOT_LOG:-0}" == "1" ]]; then
+    mkdir -p ./automd-troubleshoot-log
+fi
 ```
 
-**记录查找过程:**
+**记录查找过程（仅当启用时）:**
 ```bash
-# 在脚本中添加
+# 日志默认存于当前工作目录，而非 ~/.gromacs_troubleshoot_log
+# 这样用户可以看见和控制
 log_troubleshoot() {
+    if [[ "${AUTOMD_TROUBLESHOOT_LOG:-0}" != "1" ]]; then
+        return 0
+    fi
     local error_code="$1"
     local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-    echo "[$timestamp] ERROR-$error_code: User consulted manual" >> ~/.gromacs_troubleshoot_log/access.log
+    mkdir -p ./automd-troubleshoot-log
+    echo "[$timestamp] ERROR-$error_code: User consulted manual" >> ./automd-troubleshoot-log/access.log
 }
 ```
 
 ### 收集常见问题
 
-**分析日志:**
+**分析日志（仅当用户主动启用）:**
 ```bash
 # 统计最常见的错误
-cat ~/.gromacs_troubleshoot_log/access.log | awk '{print $3}' | sort | uniq -c | sort -rn
+cat ./automd-troubleshoot-log/access.log | awk '{print $3}' | sort | uniq -c | sort -rn
 ```
 
 **改进 Skills:**

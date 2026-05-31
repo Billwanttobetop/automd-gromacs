@@ -130,14 +130,15 @@ case "$CMD" in
         
         [[ -z "$TRJ" ]] && { echo "ERROR: -f required"; exit 1; }
         
-        CMD="gmx trjconv -f $TRJ -o $OUT"
-        [[ -n "$BEGIN" ]] && CMD="$CMD -b $BEGIN"
-        [[ -n "$END" ]] && CMD="$CMD -e $END"
-        [[ -n "$DT" ]] && CMD="$CMD -dt $DT"
-        [[ -n "$SKIP" ]] && CMD="$CMD -skip $SKIP"
+        # Build command as array (safer: no shell injection)
+        local cmd_arr=(gmx trjconv -f "$TRJ" -o "$OUT")
+        [[ -n "$BEGIN" ]] && cmd_arr+=(-b "$BEGIN")
+        [[ -n "$END" ]]   && cmd_arr+=(-e "$END")
+        [[ -n "$DT" ]]    && cmd_arr+=(-dt "$DT")
+        [[ -n "$SKIP" ]]  && cmd_arr+=(-skip "$SKIP")
         
         echo "Extracting frames..."
-        echo "System" | $CMD
+        echo "System" | "${cmd_arr[@]}"
         echo "✓ Output: $OUT"
         ;;
         

@@ -10,11 +10,28 @@ set -e
 
 # ============================================
 # 依赖自动安装
+# ⚠️ 默认关闭: 设 AUTOMD_AUTO_INSTALL=1 才允许运行时安装
+#    建议在隔离环境 (conda/docker) 中预先安装所有依赖
 # ============================================
 auto_install_dependencies() {
     local tools=("$@")
     local installed=0
-    
+
+    if [[ "${AUTOMD_AUTO_INSTALL:-0}" != "1" ]]; then
+        local missing=""
+        for tool in "${tools[@]}"; do
+            if ! command -v "$tool" &> /dev/null; then
+                missing="$missing $tool"
+            fi
+        done
+        if [[ -n "$missing" ]]; then
+            echo "[MISSING] 以下工具未安装:$missing"
+            echo "[INFO] 手动安装后重试，或设 AUTOMD_AUTO_INSTALL=1 启用自动安装"
+            return 1
+        fi
+        return 0
+    fi
+
     for tool in "${tools[@]}"; do
         if ! command -v "$tool" &> /dev/null; then
             echo "[AUTO-FIX] Installing $tool..."
