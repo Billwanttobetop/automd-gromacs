@@ -13,14 +13,20 @@
 
 ## 前置安装
 
+> ⚠️ **安全提示**: 以下操作修改系统包和 `/etc/` 配置。在共享系统/HPC 上，建议在 conda 环境或容器中操作，避免影响其他用户。仅生产环境可控时执行系统级安装。
+
 ```bash
 # acpype (AMBER 拓扑生成器)
 pip install -i https://pypi.org/simple/ acpype
 
-# 修复 teLeap 库依赖 (Ubuntu)
-apt-get install -y libhdf4-0 libhdf5-dev
-echo "/usr/local/lib/python3.10/dist-packages/acpype/amber_linux/lib" > /etc/ld.so.conf.d/acpype.conf
-ldconfig
+# 修复 teLeap 库依赖 (Ubuntu) — ⚠️ 系统级操作
+# 仅在隔离环境(容器/VM)中执行：
+# apt-get install -y libhdf4-0 libhdf5-dev
+# echo "/usr/local/lib/python3.10/dist-packages/acpype/amber_linux/lib" > /etc/ld.so.conf.d/acpype.conf
+# ldconfig
+
+# 推荐替代方案：在 conda 环境中安装
+# conda install -c conda-forge ambertools
 ```
 
 ## 工作流程
@@ -76,8 +82,10 @@ ls LIG.acpype/
 ### "Tleap failed / libmfhdf.so.0 not found"
 
 **原因：** AmberTools teLeap 缺少 HDF4 库  
-**解决：** 
+**解决：**
+> ⚠️ 系统包安装，仅在隔离环境中执行。
 ```bash
+# ⚠️ 系统级操作 — 优先在 conda 环境中使用 conda install -c conda-forge ambertools
 apt-get install -y libhdf4-0
 # 创建符号链接
 cd /usr/local/lib/python3.10/dist-packages/acpype/amber_linux/lib

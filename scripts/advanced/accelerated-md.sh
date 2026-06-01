@@ -629,7 +629,59 @@ if [[ "$PRERUN_DONE" == "true" || -f "prerun.edr" ]]; then
 EOFPRE
 fi
 
-cat >> AMD_REPORT.md << EOFANALYSIS
+if [[ "$AMD_FALLBACK" == "1" ]]; then
+    # === Metadynamics fallback report sections ===
+    cat >> AMD_REPORT.md << EOFMETA
+
+## 后续分析 (Metadynamics)
+
+⚠️ 此为 Metadynamics 运行，不是真正的 aMD。分析方法与 aMD 不同。
+
+### 1. 可视化自由能面
+
+\`\`\`bash
+# 使用 PLUMED sum_hills 重构自由能面
+plumed sum_hills --hills HILLS --outfile fes.dat --mintozero
+
+# 绘图
+gnuplot << PLOT
+set pm3d map
+splot 'fes.dat' with pm3d
+PLOT
+\`\`\`
+
+### 2. 检查 CV 采样
+
+\`\`\`bash
+# 查看 COLVAR 中的 CV 时间序列
+xmgrace COLVAR
+\`\`\`
+
+### 3. 提取构象
+
+\`\`\`bash
+gmx trjconv -s amd.tpr -f amd.xtc -o conf.gro -sep -skip 100
+\`\`\`
+
+## 理论背景 (Metadynamics)
+
+本运行使用了 Well-Tempered Metadynamics，其偏置势为：
+
+V_G(s,t) = Σ w_i * exp(-|s - s_i|² / 2σ²)
+
+其中偏置高度随时间衰减: w = w₀ * exp(-V_G(s,t) / kΔT)
+
+### 参考文献 (Metadynamics)
+
+- Barducci et al. (2008). Well-tempered metadynamics. Phys. Rev. Lett. 100, 020603.
+- Laio & Parrinello (2002). Escaping free-energy minima. PNAS 99, 12562.
+
+## 质量检查
+
+EOFMETA
+else
+    # === Real aMD report sections ===
+    cat >> AMD_REPORT.md << EOFANALYSIS
 
 ## 后续分析
 
@@ -752,6 +804,7 @@ V*(r) = V(r) + ΔV(r)
 ## 质量检查
 
 EOFANALYSIS
+fi
 
 # 检查模拟完成
 if grep -q "Finished mdrun" amd.log 2>/dev/null; then

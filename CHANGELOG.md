@@ -1,5 +1,17 @@
 # Changelog
 
+## [5.3.3] - 2026-06-01
+
+### Security (SkillSpector audit remediation — batch 2)
+- **`eval` removed** from `scripts/analysis/property-extended.sh` — `safe_run()` now uses explicit command arguments instead of string eval, preventing potential command injection
+- **Conditional report generation** in `scripts/analysis/property-extended.sh` — sections now marked ⚠️ when analysis failed, preventing users from trusting non-existent output files
+- **MARTINI download gated** in `scripts/advanced/coarse-grained.sh` — `check_martini_forcefield()` now requires `AUTOMD_CG_ALLOW_DOWNLOAD=1`; HTTP → HTTPS for all download URLs
+- **aMD report integrity** in `scripts/advanced/accelerated-md.sh` — report now conditionally excludes aMD reweighting formulas when metadynamics fallback was used; metadynamics-specific analysis sections provided instead
+- **INSTALLATION.md warnings** — security advisories added before all `sudo`, `/etc/`, and system-level operations; `insane.py` download uses HTTPS; `~/.gromacs_env.sh` warns against adding to `.bashrc`
+- **ligand-topology.md warnings** — `apt-get`, `/etc/ld.so.conf.d/`, and `ldconfig` commands now commented out with security advisories and conda alternatives
+- **qmmm-errors.md warnings** — `/etc/hosts` modification now includes security context and container-only guidance; `SYS_PTRACE` capability risk documented
+- **membrane-errors.md warnings** — `sudo mv insane.py` replaced with user-path `~/.local/bin/` install; HTTPS download
+
 ## [5.3.2] - 2026-06-01
 
 ### Security (ClawHub audit remediation)

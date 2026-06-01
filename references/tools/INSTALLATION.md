@@ -452,10 +452,14 @@ obabel --version
 
 ### 环境激活脚本
 
+> ⚠️ **注意**: 将此脚本添加到 shell 启动文件(~/.bashrc)会对所有终端生效，可能造成环境漂移和命令劫持风险。建议仅在需要时手动 `source`。
+
 创建 `~/.gromacs_env.sh`:
 ```bash
 #!/bin/bash
 # GROMACS 工具环境激活脚本
+# 使用: source ~/.gromacs_env.sh
+# ⚠️ 不要添加到 ~/.bashrc，避免环境漂移
 
 # 激活 conda 环境
 conda activate gromacs-tools

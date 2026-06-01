@@ -91,6 +91,14 @@ check_martini_forcefield() {
         done
         
         log "[WARN] MARTINI力场未找到"
+
+        if [[ "${AUTOMD_CG_ALLOW_DOWNLOAD:-0}" != "1" ]]; then
+            log "[ERROR] MARTINI力场未安装"
+            log "[INFO] 手动下载到任一搜索路径，或设 AUTOMD_CG_ALLOW_DOWNLOAD=1 启用自动下载"
+            log "[INFO] 下载地址 (HTTPS): https://cgmartini.nl/index.php/force-field-parameters/martini3"
+            error "MARTINI force field not found — install it or set AUTOMD_CG_ALLOW_DOWNLOAD=1"
+        fi
+
         log "[AUTO-FIX] 尝试下载MARTINI力场..."
         
         mkdir -p "$OUTPUT_DIR/martini.ff"
@@ -100,9 +108,9 @@ check_martini_forcefield() {
             # MARTINI 3
             log "下载MARTINI 3力场..."
             if command -v wget &> /dev/null; then
-                wget -q http://cgmartini.nl/images/parameters/martini_v3.0.0/martini_v3.0.0.tar.gz -O martini3.tar.gz || {
+                wget -q https://cgmartini.nl/images/parameters/martini_v3.0.0/martini_v3.0.0.tar.gz -O martini3.tar.gz || {
                     log "[ERROR] 下载失败"
-                    log "请手动下载: http://cgmartini.nl/index.php/force-field-parameters/martini3"
+                    log "请手动下载: https://cgmartini.nl/index.php/force-field-parameters/martini3"
                     error "MARTINI 3力场不可用"
                 }
                 tar -xzf martini3.tar.gz
@@ -110,18 +118,17 @@ check_martini_forcefield() {
             else
                 log "[ERROR] wget未安装"
                 log "解决方案:"
-                log "1. 安装wget: apt-get install wget"
-                log "2. 手动下载MARTINI力场到: $OUTPUT_DIR/martini.ff"
-                log "3. 设置MARTINI_FF_DIR环境变量"
+                log "1. 手动下载MARTINI力场到: $OUTPUT_DIR/martini.ff"
+                log "2. 设置MARTINI_FF_DIR环境变量"
                 error "无法自动下载MARTINI力场"
             fi
         else
             # MARTINI 2
             log "下载MARTINI 2力场..."
             if command -v wget &> /dev/null; then
-                wget -q http://cgmartini.nl/images/parameters/martini_v2.2/martini_v2.2.tar.gz -O martini2.tar.gz || {
+                wget -q https://cgmartini.nl/images/parameters/martini_v2.2/martini_v2.2.tar.gz -O martini2.tar.gz || {
                     log "[ERROR] 下载失败"
-                    log "请手动下载: http://cgmartini.nl/index.php/force-field-parameters/martini2"
+                    log "请手动下载: https://cgmartini.nl/index.php/force-field-parameters/martini2"
                     error "MARTINI 2力场不可用"
                 }
                 tar -xzf martini2.tar.gz

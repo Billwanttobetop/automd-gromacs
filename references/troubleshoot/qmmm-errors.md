@@ -531,18 +531,24 @@ ORCA finished by error termination in Startup
 ```bash
 export OMPI_ALLOW_RUN_AS_ROOT=1
 export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
-# 建议写入 ~/.bashrc 持久化
+# ⚠️ 仅单用户/隔离环境写入 ~/.bashrc
+# 共享系统上在终端手动 export，避免影响其他用户
 ```
 
 #### Fix 2: 添加主机名到 /etc/hosts
+> ⚠️ **安全提示**: `/etc/hosts` 是系统关键文件。修改前确认对系统的影响，生产环境需管理员审批。仅容器/隔离环境使用。
+
 ```bash
+# ⚠️ 修改系统文件 — 仅在 AutoDL/Docker 等动态容器中使用
 echo "127.0.0.1 $(hostname)" >> /etc/hosts
 # 验证: ping -c1 $(hostname)
 ```
-> ⚠️ 这一步对 AutoDL/Docker 容器至关重要！容器主机名是动态的，
+> ℹ️ 这一步对 AutoDL/Docker 容器至关重要！容器主机名是动态的，
 > 不在 /etc/hosts 中会导致 OpenMPI 进程间无法通信。
+> 在物理机/共享集群上，不应修改 /etc/hosts，应联系系统管理员配置域名解析。
 
 #### Fix 3: Docker 容器需要 --cap-add=SYS_PTRACE
+> ⚠️ `SYS_PTRACE` 是 Linux security capability，授予容器进程 ptrace 权限。仅信任的容器镜像使用。
 如果在容器内完成 Fix 1+2 后 mpirun 仍卡死：
 ```bash
 # 测试: timeout 5 mpirun -np 2 hostname

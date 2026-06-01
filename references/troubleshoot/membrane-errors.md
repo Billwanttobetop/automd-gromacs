@@ -144,11 +144,16 @@ ERROR: 手动膜构建需要预先准备的膜结构文件
 ### 解决方案
 
 **方案 1: 安装 insane**
+> ⚠️ **安全提示**: `sudo mv` 会在系统路径安装从互联网下载的脚本。生产环境建议使用 conda/pip 或安装到 `~/.local/bin/`。
+
 ```bash
-# 下载 insane
-wget http://cgmartini.nl/images/tools/insane/insane.py
+# 下载 insane (使用 HTTPS)
+wget https://cgmartini.nl/images/tools/insane/insane.py
 chmod +x insane.py
-sudo mv insane.py /usr/local/bin/insane
+# 推荐：用户路径安装
+mkdir -p ~/.local/bin && cp insane.py ~/.local/bin/insane
+# ⚠️ 仅容器/VM 中使用系统级安装:
+# sudo mv insane.py /usr/local/bin/insane
 
 # 验证安装
 insane --help
